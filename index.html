@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bus Marsala — Orari Invernali 2025/26</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--sea:#0D4F7A;--sea2:#1A6FA8;--sun:#F5C842;--terra:#D45C2E;--cream:#FAF3E8;--sand:#E8D9B8;--ink:#1A1208;--white:#fff}
+body{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+.hero{background:var(--sea);position:relative;overflow:hidden;padding:28px 20px 20px}
+.hero-bg{position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 38px,rgba(255,255,255,.03) 38px,rgba(255,255,255,.03) 40px)}
+.hero-glow{position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.2) 0%,transparent 70%)}
+.hero-inner{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+.hero-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--sun);margin-bottom:4px;font-weight:600}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(2.4rem,10vw,4.5rem);line-height:.88;color:#fff;letter-spacing:.01em}
+.hero-title span{color:var(--sun)}
+.hero-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:8px;letter-spacing:.05em}
+.hero-clock{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:2.5rem;color:#fff;line-height:1;text-align:right}
+.hero-date{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;text-align:right}
+.ticker{background:var(--sun);padding:9px 20px;display:flex;align-items:center;gap:10px}
+.ticker-dot{width:7px;height:7px;border-radius:50%;background:var(--ink);flex-shrink:0;animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.ticker-label{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;background:var(--ink);color:var(--sun);padding:2px 8px;border-radius:3px;white-space:nowrap}
+.ticker-text{font-weight:500;font-size:13px;color:var(--ink);letter-spacing:.03em}
+.controls{background:#fff;border-bottom:2px solid var(--sand);padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:50}
+.search-input{flex:1;min-width:180px;border:2px solid var(--sand);border-radius:6px;padding:8px 12px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--sea2)}
+.search-input::placeholder{color:#aaa;font-style:italic}
+.day-switch{display:flex;border:2px solid var(--sand);border-radius:6px;overflow:hidden}
+.day-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border:none;cursor:pointer;background:var(--cream);color:#999;transition:all .15s;white-space:nowrap}
+.day-btn:hover{background:var(--sand);color:var(--ink)}
+.day-btn.active{background:var(--sea);color:#fff}
+main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.section-label{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#bbb;font-weight:600;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--sand)}
+.card{background:#fff;border:2px solid var(--sand);border-radius:4px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:var(--sea2)}
+.card.open{border-color:var(--sea);box-shadow:4px 4px 0 rgba(13,79,122,.15)}
+.card-head{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;cursor:pointer;user-select:none}
+.card-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:#fff;padding:16px 14px;min-width:76px;text-align:center;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.card-info{padding:12px 14px}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--ink);line-height:1.2}
+.card-sub{font-size:11px;color:#aaa;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.card-next-wrap{padding:0 12px}
+.next-badge{background:var(--sun);color:var(--ink);font-weight:700;font-size:15px;padding:4px 10px;border-radius:3px;white-space:nowrap}
+.next-badge.gone{background:var(--sand);color:#aaa;font-size:11px;letter-spacing:.1em}
+.card-arrow{padding:0 14px 0 6px;font-size:18px;color:#ccc;transition:transform .25s}
+.card.open .card-arrow{transform:rotate(90deg)}
+.card-body{display:none;border-top:2px solid var(--sand);animation:reveal .18s ease}
+.card.open .card-body{display:block}
+@keyframes reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.tt-grid{padding:16px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.tt-grid{grid-template-columns:1fr}}
+.tt-dir-label{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:3px;margin-bottom:10px}
+.dir-a{background:var(--sea2);color:#fff}
+.dir-r{background:var(--terra);color:#fff}
+.times-row{display:flex;flex-wrap:wrap;gap:6px}
+.t-chip{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;padding:6px 11px;border-radius:4px;cursor:pointer;border:1.5px solid var(--sand);background:var(--cream);color:var(--ink);transition:all .15s;line-height:1}
+.t-chip sup{font-size:9px;color:var(--terra);vertical-align:super;letter-spacing:0}
+.t-chip.current{background:var(--sun);border-color:var(--sun);color:var(--ink)}
+.t-chip.past{opacity:.38}
+.t-chip.selected{border-color:var(--sea);background:rgba(26,111,168,.1)}
+.t-chip:hover{border-color:var(--sea2)}
+.stops-section{padding:0 16px;border-top:1px dashed var(--sand);margin-top:14px}
+.stops-header{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#aaa;margin:12px 0 10px;font-weight:600}
+.stop-row{display:grid;grid-template-columns:20px 1fr auto;gap:0 10px;align-items:stretch}
+.stop-line-col{display:flex;flex-direction:column;align-items:center}
+.stop-dot{border-radius:50%;flex-shrink:0;margin-top:10px;z-index:1;border-style:solid;border-width:2.5px}
+.stop-connector{width:2px;flex:1;min-height:14px}
+.stop-name-cell{padding:8px 0;font-size:13px;color:#444;line-height:1.3}
+.stop-name-cell.nxt{color:var(--ink);font-weight:600}
+.stop-time-cell{padding:8px 0;font-family:monospace;font-size:14px;font-weight:700;white-space:nowrap;align-self:center}
+.stop-tag{display:inline-block;font-size:10px;border-radius:3px;padding:1px 5px;letter-spacing:.08em;margin-left:6px;color:#fff}
+.hint{font-size:11px;color:#bbb;font-style:italic;padding:10px 0 6px}
+.notes-box{margin:14px 16px 0;border-left:3px solid var(--sun);padding:8px 12px;background:#fffbef}
+.notes-box p{font-size:12px;color:#7a6020;line-height:1.6}
+.map-section{padding:14px 16px 16px;border-top:1px dashed var(--sand);margin-top:14px}
+.map-toggle-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#888;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;transition:color .15s}
+.map-toggle-btn:hover{color:var(--sea2)}
+.map-toggle-btn .arr{transition:transform .2s;display:inline-block}
+.map-toggle-btn.open{color:var(--sea)}
+.map-toggle-btn.open .arr{transform:rotate(90deg)}
+.map-dir-tabs{display:none;gap:6px;margin-top:10px;flex-wrap:wrap}
+.map-toggle-btn.open~.map-dir-tabs{display:flex}
+.map-dir-tab{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:3px;border:1.5px solid var(--sand);background:var(--cream);color:#888;cursor:pointer;transition:all .15s}
+.map-dir-tab:hover{border-color:var(--sea2);color:var(--sea2)}
+.map-dir-tab.active{background:var(--sea);color:#fff;border-color:var(--sea)}
+.map-canvas-wrap{display:none;margin-top:10px;border:1.5px solid var(--sand);border-radius:6px;overflow:hidden}
+.map-toggle-btn.open~.map-dir-tabs~.map-canvas-wrap{display:block}
+canvas.route-canvas{width:100%;height:auto;display:block}
+footer{background:var(--sea);color:rgba(255,255,255,.4);text-align:center;padding:20px;font-size:11px;letter-spacing:.06em;line-height:1.8}
+@media(max-width:500px){.card-next-wrap{display:none}.card-num{min-width:64px;padding:14px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Comune di Marsala · TPL</div>
+      <div class="hero-title">ORARI<br><span>BUS</span></div>
+      <div class="hero-sub">Orario invernale · dal 15.09.2025</div>
+    </div>
+    <div>
+      <div class="hero-clock" id="clock">--:--</div>
+      <div class="hero-date" id="dateStr">---</div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker">
+  <div class="ticker-dot"></div>
+  <div class="ticker-label">Prossima</div>
+  <div class="ticker-text" id="tickerText">Calcolo…</div>
+</div>
+
+<div class="controls">
+  <input class="search-input" id="searchInput" type="text" placeholder="🔍  Cerca linea o destinazione…" oninput="render()">
+  <div class="day-switch">
+    <button class="day-btn active" onclick="switchDay('feriale',this)">Lun–Sab</button>
+    <button class="day-btn" onclick="switchDay('domenicale',this)">Dom/Festivi</button>
+  </div>
+</div>
+
+<main>
+  <div class="section-label" id="sectionLabel">— Linee feriali (Lun–Sab) —</div>
+  <div id="cards"></div>
+</main>
+
+<footer>
+  Comune di Marsala · Servizio Comunale di Trasporto Pubblico Locale<br>
+  ⚠ Orario provvisorio — soggetto a variazioni per guasti o assenza di personale.
+</footer>
+
+<script>
+var LINES={
+feriale:[
+{id:'L1',num:'LINEA 1',color:'#1A6FA8',name:'Marsala \u2014 Torreggiano \u2014 Petrosino',
+ andata:['6:25','8:00','10:40','12:50','14:40','17:00'],af:['','**','*','','','*'],
+ ritorno:['7:05','8:45','11:10','13:35','15:25','17:30'],rf:['','**','*','','','*'],
+ notes:['8:00** prolunga per Istituto Geometra','10:40* e 17:00* Bivio Triglia SS.115'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'P.zza Caprera',ll:[37.7985,12.4340],m:3},
+  {n:'C/da Ponte',ll:[37.7870,12.4290],m:8},
+  {n:'Lungomare Mediterraneo',ll:[37.7820,12.4230],m:13},
+  {n:'Rotonda Signorino',ll:[37.7750,12.4290],m:17},
+  {n:'C/da Fossarunza',ll:[37.7680,12.4360],m:21},
+  {n:'C/da Torreggiano',ll:[37.7600,12.4430],m:25},
+  {n:'Via U. La Malfa',ll:[37.7530,12.4500],m:29},
+  {n:'V. Triglia Scaletta',ll:[37.7450,12.4560],m:33},
+  {n:'C/da S. Giuseppe',ll:[37.7380,12.4620],m:37},
+  {n:'C/da Biscione (Capolinea)',ll:[37.7310,12.4680],m:40}
+]},
+{id:'L2',num:'LINEA 2/5',color:'#D45C2E',name:'Marsala \u2014 Ciancio \u2014 Ciavolo',
+ andata:['6:35','8:00','10:15','12:50','14:40','16:45'],af:['','','','','',''],
+ ritorno:['7:10','8:45','11:00','13:35','15:25','17:30'],rf:['','','','','',''],
+ notes:[],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'P.zza Caprera',ll:[37.7985,12.4340],m:3},
+  {n:'Via N. Bixio',ll:[37.7980,12.4410],m:6},
+  {n:'Via Salemi',ll:[37.7960,12.4490],m:9},
+  {n:'Via Reg. Siciliana',ll:[37.7940,12.4580],m:12},
+  {n:'Via Tunisi',ll:[37.7880,12.4680],m:16},
+  {n:'C/da Ciancio',ll:[37.7800,12.4800],m:20},
+  {n:'C/da Digerbato',ll:[37.7720,12.4950],m:24},
+  {n:'C/da Ciavolotto',ll:[37.7660,12.5200],m:29},
+  {n:'C/da Ciavolo (Capolinea)',ll:[37.7618,12.5648],m:35}
+]},
+{id:'L3',num:'LINEA 3',color:'#2E8B57',name:'Marsala \u2014 Baglio Catalano',
+ andata:['6:25','8:00','13:15','14:40'],af:['*','','**','**'],
+ ritorno:['7:00','8:45','13:50','15:15'],rf:['*','','**','**'],
+ notes:['6:25* al ritorno transita dai Licei','13:15** e 14:40** in andata transita dai licei Sappusi'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla',ll:[37.8000,12.4380],m:3},
+  {n:'V.le Isonzo',ll:[37.8030,12.4420],m:6},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:10},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:13},
+  {n:'C/da S. Venera',ll:[37.8220,12.4650],m:18},
+  {n:'C/da Fontanelle',ll:[37.8290,12.4750],m:22},
+  {n:'C/da Rakalia',ll:[37.8360,12.4880],m:27},
+  {n:'SS. Filippo e Giacomo',ll:[37.8390,12.5050],m:31},
+  {n:'Chiesa Purgatorio',ll:[37.8410,12.5180],m:34},
+  {n:'C/da Baronazzo Amafi',ll:[37.8430,12.5310],m:37},
+  {n:'Baglio Catalano (Capolinea)',ll:[37.8443,12.5437],m:40}
+]},
+{id:'L4',num:'LINEA 4',color:'#8B4513',name:'Marsala \u2014 Sappusi \u2014 Birgi',
+ andata:['6:35','8:00','10:45','13:15','14:40','17:00'],af:['*','','**','*','***',''],
+ ritorno:['7:10','8:45','11:15','13:50','15:25','17:40'],rf:['*','','**','*','***',''],
+ notes:['6:35* e 13:15* al ritorno ai licei Sappusi','10:45** arriva Casello Bonetto','14:40*** aspetta uscita alunni licei Sappusi'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'V.ggio Sappusi',ll:[37.8160,12.4600],m:13},
+  {n:'C/da Giunchi',ll:[37.8300,12.4650],m:18},
+  {n:'SP. 21',ll:[37.8500,12.4700],m:24},
+  {n:'C/da Spagnola',ll:[37.8680,12.4720],m:29},
+  {n:'C/da S. Leonardo',ll:[37.8800,12.4760],m:33},
+  {n:'C/da Birgi',ll:[37.8980,12.4830],m:37},
+  {n:'Imbarc. S. Maria',ll:[37.9060,12.4870],m:40},
+  {n:'Birgi Chiesa (Capolinea)',ll:[37.9138,12.4911],m:43}
+]},
+{id:'L6',num:'LINEA 6',color:'#9B59B6',name:'Marsala \u2014 S. Padre',
+ andata:['6:35','8:00','10:15','12:50','14:40','16:45'],af:['','','','','',''],
+ ritorno:['7:10','8:45','11:00','13:35','15:20','17:30'],rf:['','','','','',''],
+ notes:[],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mazzini',ll:[37.7990,12.4360],m:2},
+  {n:'P.zza F. Pizzo',ll:[37.8010,12.4340],m:5},
+  {n:'Via Fazio / C.so Calatafimi',ll:[37.8070,12.4280],m:9},
+  {n:'C/da Ponte / Via Bue Morto',ll:[37.8150,12.4250],m:14},
+  {n:'Stadio Bambina',ll:[37.8380,12.4310],m:20},
+  {n:'C/da Ventrischi',ll:[37.8480,12.4330],m:24},
+  {n:'C/da S. Anna',ll:[37.8600,12.4400],m:28},
+  {n:'C/da Samperi / Scuola S. Padre (Capolinea)',ll:[37.8740,12.4600],m:35}
+]},
+{id:'L10',num:'LINEA 10/7',color:'#E67E22',name:'Marsala \u2014 Granatello \u2014 Cutusio',
+ andata:['6:35','8:00','10:30','13:15','14:40','17:00'],af:['*','**','','***','**',''],
+ ritorno:['7:10','8:45','11:10','13:50','15:20','17:40'],rf:['*','**','','***','**',''],
+ notes:['6:35* al ritorno transita dai Licei','8:00 e 14:40** in andata transita dai Licei','13:15*** in andata e ritorno transita dai Licei'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:12},
+  {n:'C/da S. Venera',ll:[37.8220,12.4650],m:17},
+  {n:'C/da Addolorata',ll:[37.8360,12.4820],m:22},
+  {n:'C/da Bosco',ll:[37.8500,12.4950],m:27},
+  {n:'Granatello',ll:[37.8660,12.5100],m:32},
+  {n:'Bivio Ragattisi',ll:[37.8730,12.5200],m:35},
+  {n:'Capolinea Cutusio',ll:[37.8758,12.5283],m:38}
+]},
+{id:'L13',num:'LINEA 13/8',color:'#C0392B',name:'Marsala \u2014 Amabilina \u2014 Ospedale \u2014 Matarocco',
+ andata:['6:35','8:00','9:45','10:45','13:15','14:40','16:00','17:10'],af:['*','****','**','**','***','****','**',''],
+ ritorno:['7:10','8:45','10:15','11:15','13:55','15:20','16:30','17:40'],rf:['*','****','**','**','***','****','**',''],
+ notes:['6:35* al ritorno transita dai Licei','9:45 \u00b7 10:45 \u00b7 16:00** capolinea Ospedale','13:15*** in andata e ritorno transita dai Licei Sappusi','8:00 e 14:40**** in andata transita dai Licei Sappusi'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / C.so Gramsci',ll:[37.8090,12.4510],m:7},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:11},
+  {n:'Via D. Alighieri',ll:[37.8060,12.4620],m:15},
+  {n:'Via Colaianni / Via Vita',ll:[37.7980,12.4750],m:19},
+  {n:'C/da Amabilina',ll:[37.7960,12.4820],m:22},
+  {n:'Ospedale Paolo Borsellino',ll:[37.7961,12.4985],m:26},
+  {n:'C/da Cardilla',ll:[37.7980,12.5090],m:29},
+  {n:'C/da Misilla',ll:[37.8010,12.5160],m:32},
+  {n:'C/da Torrelunga Puleo',ll:[37.8050,12.5220],m:35},
+  {n:'Incrocio Paolini/Matarocco (Capolinea)',ll:[37.8098,12.5300],m:38}
+]},
+{id:'L21',num:'LINEA 21',color:'#16A085',name:'Supplemento Scuole \u2014 Linea 1',
+ andata:['7:15','8:00','13:25','14:55'],af:['','','',''],
+ ritorno:[],rf:[],
+ notes:['\u26a0 Il sabato viene esclusa la Linea 21 (Suppl. scuole)'],
+ stops:[
+  {n:'Via U. La Malfa',ll:[37.7530,12.4500],m:0},
+  {n:'Via dei Platani',ll:[37.7600,12.4430],m:4},
+  {n:'B. Triglia / Strasatti',ll:[37.7750,12.4430],m:9},
+  {n:'C/da Cuore di Ges\u00f9',ll:[37.7820,12.4390],m:13},
+  {n:'Via Pastorella / Via Bue Morto',ll:[37.7930,12.4340],m:17},
+  {n:'Autostazione (Marsala)',ll:[37.7966,12.4352],m:22}
+]}
+],
+domenicale:[
+{id:'LD',num:'DOM/FEST',color:'#1A6FA8',name:'Marsala \u2014 Sappusi \u2014 Amabilina \u2014 Ospedale',
+ andata:['8:00','9:30','10:45','12:00'],af:['','','',''],
+ ritorno:['8:45','10:15','11:30','12:45'],rf:['','','',''],
+ notes:['Domenica e festivi: viene garantita SOLO questa linea domenicale.'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Vespri / Via Sibilla',ll:[37.8000,12.4380],m:3},
+  {n:'V.le Isonzo / C.so Gramsci',ll:[37.8090,12.4510],m:8},
+  {n:'V.ggio Sappusi',ll:[37.8160,12.4600],m:12},
+  {n:'Via Trapani / Via D. Alighieri',ll:[37.8060,12.4620],m:17},
+  {n:'Via Colaianni / Via Vita',ll:[37.7980,12.4750],m:22},
+  {n:'C/da Amabilina',ll:[37.7960,12.4820],m:26},
+  {n:'Ospedale (Capolinea)',ll:[37.7961,12.4985],m:30}
+]}
+]};
+
+var currentDay='feriale';
+var selected={};
+
+function toMins(t){var p=t.split(':');return parseInt(p[0])*60+(parseInt(p[1])||0);}
+function addMins(base,delta){var tot=toMins(base)+delta;return ('0'+Math.floor(tot/60)).slice(-2)+':'+('0'+(tot%60)).slice(-2);}
+function nowMins(){var n=new Date();return n.getHours()*60+n.getMinutes();}
+
+function updateClock(){
+  var n=new Date();
+  document.getElementById('clock').textContent=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);
+  var days=['Domenica','Luned\u00ec','Marted\u00ec','Mercoled\u00ec','Gioved\u00ec','Venerd\u00ec','Sabato'];
+  var months=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  document.getElementById('dateStr').textContent=days[n.getDay()]+' '+n.getDate()+' '+months[n.getMonth()]+' '+n.getFullYear();
+}
+
+function updateTicker(){
+  var lines=LINES[currentDay];var now=nowMins();var best=null,bestLine=null;
+  for(var i=0;i<lines.length;i++){for(var j=0;j<lines[i].andata.length;j++){var m=toMins(lines[i].andata[j]);if(m>now&&(best===null||m<best)){best=m;bestLine=lines[i];}}}
+  var el=document.getElementById('tickerText');
+  if(!bestLine){el.textContent='Nessuna corsa disponibile nelle prossime ore.';return;}
+  el.textContent=bestLine.name+' \u00b7 ore '+('0'+Math.floor(best/60)).slice(-2)+':'+('0'+(best%60)).slice(-2)+' \u00b7 tra '+(best-nowMins())+' min';
+}
+
+function switchDay(d,btn){
+  currentDay=d;
+  document.querySelectorAll('.day-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('sectionLabel').textContent=d==='feriale'?'\u2014 Linee feriali (Lun\u2013Sab) \u2014':'\u2014 Servizio domenicale / festivo \u2014';
+  selected={};render();updateTicker();
+}
+
+function toggleCard(id){document.getElementById('card-'+id).classList.toggle('open');}
+
+function selectTime(lineId,time,dir){
+  if(selected[lineId]&&selected[lineId].time===time&&selected[lineId].dir===dir){delete selected[lineId];}
+  else{selected[lineId]={time:time,dir:dir};}
+  render(true);
+}
+
+function toggleMap(btn,lineId){
+  btn.classList.toggle('open');
+  if(btn.classList.contains('open')){setTimeout(function(){drawMap(lineId,'andata');},40);}
+}
+
+function switchMapDir(lineId,dir,tabEl){
+  tabEl.closest('.map-section').querySelectorAll('.map-dir-tab').forEach(function(t){t.classList.remove('active');});
+  tabEl.classList.add('active');
+  drawMap(lineId,dir);
+}
+
+function drawMap(lineId,dir){
+  var canvas=document.getElementById('canvas-'+lineId);
+  if(!canvas)return;
+  var line=null;
+  var lines=LINES[currentDay];
+  for(var i=0;i<lines.length;i++){if(lines[i].id===lineId){line=lines[i];break;}}
+  if(!line)return;
+  var dpr=window.devicePixelRatio||1;
+  var W=canvas.parentElement.offsetWidth||480;
+  var H=Math.round(W*0.54);
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  var ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  var stops=line.stops;
+  var lats=stops.map(function(s){return s.ll[0];});
+  var lngs=stops.map(function(s){return s.ll[1];});
+  var minLat=Math.min.apply(null,lats),maxLat=Math.max.apply(null,lats);
+  var minLng=Math.min.apply(null,lngs),maxLng=Math.max.apply(null,lngs);
+  var pad=44;
+  var rangeX=maxLng-minLng||0.001,rangeY=maxLat-minLat||0.001;
+  var scX=(W-pad*2)/rangeX,scY=(H-pad*2)/rangeY,sc=Math.min(scX,scY);
+  var offX=(W-rangeX*sc)/2,offY=(H-rangeY*sc)/2;
+  function toXY(ll){return{x:offX+(ll[1]-minLng)*sc,y:H-(offY+(ll[0]-minLat)*sc)};}
+  var pts=stops.map(function(s){return toXY(s.ll);});
+
+  ctx.fillStyle='#f0ebe1';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=1;
+  for(var i=1;i<8;i++){ctx.beginPath();ctx.moveTo(W/8*i,0);ctx.lineTo(W/8*i,H);ctx.stroke();}
+  for(var i=1;i<6;i++){ctx.beginPath();ctx.moveTo(0,H/6*i);ctx.lineTo(W,H/6*i);ctx.stroke();}
+
+  // shadow
+  ctx.beginPath();ctx.moveTo(pts[0].x+2,pts[0].y+2);
+  for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i].x+2,pts[i].y+2);
+  ctx.strokeStyle='rgba(0,0,0,0.1)';ctx.lineWidth=5;ctx.lineJoin='round';ctx.lineCap='round';
+  if(dir==='ritorno')ctx.setLineDash([10,6]);ctx.stroke();ctx.setLineDash([]);
+
+  // route
+  ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+  for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
+  ctx.strokeStyle=line.color;ctx.lineWidth=4;ctx.lineJoin='round';ctx.lineCap='round';
+  if(dir==='ritorno')ctx.setLineDash([10,6]);ctx.stroke();ctx.setLineDash([]);
+
+  // arrow
+  if(pts.length>2){
+    var mid=Math.floor(pts.length/2);
+    var p1=pts[mid-1],p2=pts[mid];
+    var ang=Math.atan2(p2.y-p1.y,p2.x-p1.x);
+    ctx.save();ctx.translate((p1.x+p2.x)/2,(p1.y+p2.y)/2);ctx.rotate(ang);
+    ctx.fillStyle=line.color;ctx.beginPath();ctx.moveTo(8,0);ctx.lineTo(-5,5);ctx.lineTo(-5,-5);ctx.closePath();ctx.fill();ctx.restore();
+  }
+
+  // stops
+  for(var i=0;i<pts.length;i++){
+    var p=pts[i];var isEnd=i===0||i===pts.length-1;var r=isEnd?9:6;
+    ctx.beginPath();ctx.arc(p.x,p.y,r+1,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.12)';ctx.fill();
+    ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.fillStyle=isEnd?line.color:'#fff';ctx.strokeStyle=line.color;ctx.lineWidth=2.5;ctx.fill();ctx.stroke();
+    var raw=stops[i].n.replace(' (Capolinea)','').split('/')[0].trim();
+    var label=raw.length>20?raw.slice(0,18)+'\u2026':raw;
+    ctx.font=(isEnd?'bold ':'')+' 9px sans-serif';
+    var tw=ctx.measureText(label).width;
+    var lx=p.x,ly=p.y+(i%2===0?-13:16);
+    var align=p.x>W*0.72?'right':p.x<W*0.28?'left':'center';
+    ctx.textAlign=align;
+    var bx=align==='center'?lx-tw/2-2:align==='right'?lx-tw-2:lx-2;
+    ctx.fillStyle='rgba(250,243,232,0.9)';ctx.fillRect(bx,ly-9,tw+4,13);
+    ctx.fillStyle=isEnd?line.color:'#444';ctx.fillText(label,lx,ly);
+  }
+}
+
+function buildStopList(line,selTime,selDir){
+  if(!selTime)return '<div class="hint">\uD83D\uDC46 Tocca un orario per vedere le fermate con gli orari</div>';
+  var now=nowMins();var depM=toMins(selTime);
+  var html='<div class="stops-header">Fermate \u00b7 Partenza '+selTime+'</div>';
+  for(var i=0;i<line.stops.length;i++){
+    var s=line.stops[i];
+    var arrTime=addMins(selTime,s.m);
+    var arrM=depM+s.m;
+    var isPast=arrM<now;
+    var isFirst=i===0,isLast=i===line.stops.length-1;
+    var isNext=!isPast&&(i===0||(depM+line.stops[i-1].m)<now);
+    var dotSize=isFirst||isLast?12:8;
+    var dotColor=isNext?'#F5C842':(isFirst||isLast)?line.color:'#fff';
+    html+='<div class="stop-row" style="opacity:'+(isPast?0.38:1)+'">'+
+      '<div class="stop-line-col">'+
+        '<div class="stop-dot" style="width:'+dotSize+'px;height:'+dotSize+'px;background:'+dotColor+';border-color:'+line.color+';'+(isNext?'box-shadow:0 0 0 3px '+line.color+'33;':'')+'"></div>'+
+        (!isLast?'<div class="stop-connector" style="background:'+line.color+'33"></div>':'')+
+      '</div>'+
+      '<div class="stop-name-cell'+(isNext?' nxt':'')+'">'+
+        s.n.replace(' (Capolinea)','')+
+        (isFirst?'<span class="stop-tag" style="background:'+line.color+'">PARTENZA</span>':'')+
+        (isLast?'<span class="stop-tag" style="background:#555">CAPOLINEA</span>':'')+
+      '</div>'+
+      '<div class="stop-time-cell" style="color:'+(isNext?line.color:isPast?'#bbb':'#1A1208')+'">'+arrTime+'</div>'+
+    '</div>';
+  }
+  return html;
+}
+
+function render(keepOpen){
+  var q=document.getElementById('searchInput').value.toLowerCase().trim();
+  var now=nowMins();
+  var lines=LINES[currentDay].filter(function(l){return !q||l.name.toLowerCase().indexOf(q)>-1||l.num.toLowerCase().indexOf(q)>-1;});
+  if(!lines.length){document.getElementById('cards').innerHTML='<div style="text-align:center;padding:60px 20px;color:#bbb;font-size:16px">Nessuna linea trovata.</div>';return;}
+
+  var openSet=new Set();
+  if(keepOpen)document.querySelectorAll('.card.open').forEach(function(c){openSet.add(c.id);});
+  var openMaps={};
+  if(keepOpen)document.querySelectorAll('.map-toggle-btn.open').forEach(function(b){openMaps[b.getAttribute('data-lid')]=true;});
+
+  var html='';
+  for(var li=0;li<lines.length;li++){
+    var l=lines[li];
+    var sel=selected[l.id];
+    var nextA=null;
+    for(var i=0;i<l.andata.length;i++){if(toMins(l.andata[i])>now){nextA=l.andata[i];break;}}
+    var nextBadge=nextA?'<span class="next-badge">'+nextA+'</span>':'<span class="next-badge gone">Fine corse</span>';
+
+    function makeChips(times,flags,dir){
+      var h='';
+      for(var i=0;i<times.length;i++){
+        var t=times[i];var m=toMins(t);
+        var cls='t-chip';
+        if(t===nextA&&dir==='andata')cls+=' current';
+        if(m<now)cls+=' past';
+        if(sel&&sel.time===t&&sel.dir===dir)cls+=' selected';
+        h+='<div class="'+cls+'" onclick="event.stopPropagation();selectTime(\''+l.id+'\',\''+t+'\',\''+dir+'\')">'+t+'<sup>'+flags[i]+'</sup></div>';
+      }
+      return h;
+    }
+
+    var notesHtml='';
+    if(l.notes.length){notesHtml='<div class="notes-box">'+l.notes.map(function(n){return '<p>'+n+'</p>';}).join('')+'</div>';}
+
+    var wasOpen=openSet.has('card-'+l.id);
+    var mapWasOpen=openMaps[l.id];
+
+    html+='<div class="card'+(wasOpen?' open':'')+'" id="card-'+l.id+'">'+
+      '<div class="card-head" onclick="toggleCard(\''+l.id+'\')">'+
+        '<div class="card-num" style="background:'+l.color+'">'+l.num+'</div>'+
+        '<div class="card-info"><div class="card-title">'+l.name+'</div><div class="card-sub">Partenza \u00b7 Piazza del Popolo</div></div>'+
+        '<div class="card-next-wrap">'+nextBadge+'</div>'+
+        '<div class="card-arrow">\u203a</div>'+
+      '</div>'+
+      '<div class="card-body">'+
+        '<div class="tt-grid">'+
+          '<div><div class="tt-dir-label dir-a">\u2197 Andata</div><div class="times-row">'+makeChips(l.andata,l.af,'andata')+'</div></div>'+
+          (l.ritorno.length?'<div><div class="tt-dir-label dir-r">\u2199 Ritorno</div><div class="times-row">'+makeChips(l.ritorno,l.rf,'ritorno')+'</div></div>':'<div></div>')+
+        '</div>'+
+        '<div class="stops-section">'+buildStopList(l,sel?sel.time:null,sel?sel.dir:'andata')+'</div>'+
+        notesHtml+
+        '<div class="map-section" onclick="event.stopPropagation()">'+
+          '<button class="map-toggle-btn'+(mapWasOpen?' open':'')+'" data-lid="'+l.id+'" onclick="toggleMap(this,\''+l.id+'\')">'+
+            '<span class="arr">\u203a</span> \uD83D\uDDFA Mappa percorso'+
+          '</button>'+
+          '<div class="map-dir-tabs">'+
+            '<button class="map-dir-tab active" onclick="switchMapDir(\''+l.id+'\',\'andata\',this)">\u2197 Andata</button>'+
+            (l.ritorno.length?'<button class="map-dir-tab" onclick="switchMapDir(\''+l.id+'\',\'ritorno\',this)">\u2199 Ritorno</button>':'')+
+          '</div>'+
+          '<div class="map-canvas-wrap"><canvas class="route-canvas" id="canvas-'+l.id+'" width="480" height="260"></canvas></div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+  document.getElementById('cards').innerHTML=html;
+
+  if(keepOpen){
+    openSet.forEach(function(cardId){
+      var lineId=cardId.replace('card-','');
+      if(openMaps[lineId])setTimeout(function(){drawMap(lineId,'andata');},40);
+    });
+  }
+}
+
+updateClock();updateTicker();render();
+setInterval(updateClock,15000);setInterval(updateTicker,60000);
+</script>
+</body>
+</html>
