@@ -7,8 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--sea:#0D4F7A;--sea2:#1A6FA8;--sun:#F5C842;--terra:#D45C2E;--cream:#FAF3E8;--sand:#E8D9B8;--ink:#1A1208;--white:#fff}
+:root{--sea:#0D4F7A;--sea2:#1A6FA8;--sun:#F5C842;--terra:#D45C2E;--cream:#FAF3E8;--sand:#E8D9B8;--ink:#1A1208}
 body{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+
+/* HERO */
 .hero{background:var(--sea);position:relative;overflow:hidden;padding:28px 20px 20px}
 .hero-bg{position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 38px,rgba(255,255,255,.03) 38px,rgba(255,255,255,.03) 40px)}
 .hero-glow{position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.2) 0%,transparent 70%)}
@@ -19,21 +21,50 @@ body{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;fo
 .hero-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:8px;letter-spacing:.05em}
 .hero-clock{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:2.5rem;color:#fff;line-height:1;text-align:right}
 .hero-date{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;text-align:right}
+
+/* TICKER */
 .ticker{background:var(--sun);padding:9px 20px;display:flex;align-items:center;gap:10px}
 .ticker-dot{width:7px;height:7px;border-radius:50%;background:var(--ink);flex-shrink:0;animation:blink 1.4s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .ticker-label{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;background:var(--ink);color:var(--sun);padding:2px 8px;border-radius:3px;white-space:nowrap}
 .ticker-text{font-weight:500;font-size:13px;color:var(--ink);letter-spacing:.03em}
+
+/* CONTROLS */
 .controls{background:#fff;border-bottom:2px solid var(--sand);padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:50}
-.search-input{flex:1;min-width:180px;border:2px solid var(--sand);border-radius:6px;padding:8px 12px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-input{width:100%;border:2px solid var(--sand);border-radius:6px;padding:8px 12px 8px 36px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s}
 .search-input:focus{border-color:var(--sea2)}
 .search-input::placeholder{color:#aaa;font-style:italic}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;color:#aaa;pointer-events:none}
+/* search suggestions */
+.search-suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:2px solid var(--sea2);border-radius:6px;z-index:200;max-height:220px;overflow-y:auto;display:none;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.search-suggestions.show{display:block}
+.sug-item{padding:9px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--sand);display:flex;align-items:center;gap:8px}
+.sug-item:last-child{border-bottom:none}
+.sug-item:hover{background:var(--cream)}
+.sug-item-icon{font-size:11px;opacity:.5;flex-shrink:0}
+.sug-item-main{font-weight:500;color:var(--ink)}
+.sug-item-sub{font-size:11px;color:#aaa;margin-top:1px}
+.sug-section{padding:5px 14px 3px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#bbb;font-weight:600;background:var(--cream)}
+
 .day-switch{display:flex;border:2px solid var(--sand);border-radius:6px;overflow:hidden}
 .day-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border:none;cursor:pointer;background:var(--cream);color:#999;transition:all .15s;white-space:nowrap}
 .day-btn:hover{background:var(--sand);color:var(--ink)}
 .day-btn.active{background:var(--sea);color:#fff}
+
+/* YOUR STOP BANNER */
+.stop-banner{background:linear-gradient(90deg,var(--sea2),#1a7ab8);padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stop-banner-icon{font-size:16px}
+.stop-banner-text{font-size:13px;color:#fff;flex:1}
+.stop-banner-text strong{font-weight:600}
+.stop-banner-clear{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:4px 10px;cursor:pointer;transition:background .15s;white-space:nowrap}
+.stop-banner-clear:hover{background:rgba(255,255,255,.3)}
+
+/* MAIN */
 main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
 .section-label{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#bbb;font-weight:600;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--sand)}
+
+/* CARD */
 .card{background:#fff;border:2px solid var(--sand);border-radius:4px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .card:hover{border-color:var(--sea2)}
 .card.open{border-color:var(--sea);box-shadow:4px 4px 0 rgba(13,79,122,.15)}
@@ -42,6 +73,7 @@ main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
 .card-info{padding:12px 14px}
 .card-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--ink);line-height:1.2}
 .card-sub{font-size:11px;color:#aaa;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.card-sub.your-stop{color:var(--sea2);font-weight:600}
 .card-next-wrap{padding:0 12px}
 .next-badge{background:var(--sun);color:var(--ink);font-weight:700;font-size:15px;padding:4px 10px;border-radius:3px;white-space:nowrap}
 .next-badge.gone{background:var(--sand);color:#aaa;font-size:11px;letter-spacing:.1em}
@@ -50,6 +82,8 @@ main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
 .card-body{display:none;border-top:2px solid var(--sand);animation:reveal .18s ease}
 .card.open .card-body{display:block}
 @keyframes reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* TIMES */
 .tt-grid{padding:16px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:520px){.tt-grid{grid-template-columns:1fr}}
 .tt-dir-label{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:3px;margin-bottom:10px}
@@ -62,6 +96,8 @@ main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
 .t-chip.past{opacity:.38}
 .t-chip.selected{border-color:var(--sea);background:rgba(26,111,168,.1)}
 .t-chip:hover{border-color:var(--sea2)}
+
+/* STOPS */
 .stops-section{padding:0 16px;border-top:1px dashed var(--sand);margin-top:14px}
 .stops-header{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#aaa;margin:12px 0 10px;font-weight:600}
 .stop-row{display:grid;grid-template-columns:20px 1fr auto;gap:0 10px;align-items:stretch}
@@ -70,11 +106,16 @@ main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
 .stop-connector{width:2px;flex:1;min-height:14px}
 .stop-name-cell{padding:8px 0;font-size:13px;color:#444;line-height:1.3}
 .stop-name-cell.nxt{color:var(--ink);font-weight:600}
+.stop-name-cell.your-stop-row{color:var(--sea2);font-weight:700}
 .stop-time-cell{padding:8px 0;font-family:monospace;font-size:14px;font-weight:700;white-space:nowrap;align-self:center}
 .stop-tag{display:inline-block;font-size:10px;border-radius:3px;padding:1px 5px;letter-spacing:.08em;margin-left:6px;color:#fff}
 .hint{font-size:11px;color:#bbb;font-style:italic;padding:10px 0 6px}
+
+/* NOTES */
 .notes-box{margin:14px 16px 0;border-left:3px solid var(--sun);padding:8px 12px;background:#fffbef}
 .notes-box p{font-size:12px;color:#7a6020;line-height:1.6}
+
+/* MAP */
 .map-section{padding:14px 16px 16px;border-top:1px dashed var(--sand);margin-top:14px}
 .map-toggle-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#888;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;transition:color .15s}
 .map-toggle-btn:hover{color:var(--sea2)}
@@ -89,6 +130,7 @@ main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
 .map-canvas-wrap{display:none;margin-top:10px;border:1.5px solid var(--sand);border-radius:6px;overflow:hidden}
 .map-toggle-btn.open~.map-dir-tabs~.map-canvas-wrap{display:block}
 canvas.route-canvas{width:100%;height:auto;display:block}
+
 footer{background:var(--sea);color:rgba(255,255,255,.4);text-align:center;padding:20px;font-size:11px;letter-spacing:.06em;line-height:1.8}
 @media(max-width:500px){.card-next-wrap{display:none}.card-num{min-width:64px;padding:14px 10px;font-size:12px}}
 </style>
@@ -96,8 +138,7 @@ footer{background:var(--sea);color:rgba(255,255,255,.4);text-align:center;paddin
 <body>
 
 <div class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-glow"></div>
+  <div class="hero-bg"></div><div class="hero-glow"></div>
   <div class="hero-inner">
     <div>
       <div class="hero-eyebrow">Comune di Marsala · TPL</div>
@@ -118,11 +159,23 @@ footer{background:var(--sea);color:rgba(255,255,255,.4);text-align:center;paddin
 </div>
 
 <div class="controls">
-  <input class="search-input" id="searchInput" type="text" placeholder="🔍  Cerca linea o destinazione…" oninput="render()">
+  <div class="search-wrap" id="searchWrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" autocomplete="off"
+      placeholder="Cerca linea, destinazione o fermata…"
+      oninput="onSearchInput()" onfocus="onSearchFocus()" onblur="onSearchBlur()">
+    <div class="search-suggestions" id="suggestions"></div>
+  </div>
   <div class="day-switch">
     <button class="day-btn active" onclick="switchDay('feriale',this)">Lun–Sab</button>
     <button class="day-btn" onclick="switchDay('domenicale',this)">Dom/Festivi</button>
   </div>
+</div>
+
+<div id="stopBanner" style="display:none" class="stop-banner">
+  <span class="stop-banner-icon">📍</span>
+  <span class="stop-banner-text">Orari calcolati da: <strong id="stopBannerName"></strong></span>
+  <button class="stop-banner-clear" onclick="clearMyStop()">✕ Rimuovi fermata</button>
 </div>
 
 <main>
@@ -153,7 +206,7 @@ feriale:[
   {n:'Via U. La Malfa',ll:[37.7530,12.4500],m:29},
   {n:'V. Triglia Scaletta',ll:[37.7450,12.4560],m:33},
   {n:'C/da S. Giuseppe',ll:[37.7380,12.4620],m:37},
-  {n:'C/da Biscione (Capolinea)',ll:[37.7310,12.4680],m:40}
+  {n:'C/da Biscione',ll:[37.7310,12.4680],m:40}
 ]},
 {id:'L2',num:'LINEA 2/5',color:'#D45C2E',name:'Marsala \u2014 Ciancio \u2014 Ciavolo',
  andata:['6:35','8:00','10:15','12:50','14:40','16:45'],af:['','','','','',''],
@@ -169,7 +222,7 @@ feriale:[
   {n:'C/da Ciancio',ll:[37.7800,12.4800],m:20},
   {n:'C/da Digerbato',ll:[37.7720,12.4950],m:24},
   {n:'C/da Ciavolotto',ll:[37.7660,12.5200],m:29},
-  {n:'C/da Ciavolo (Capolinea)',ll:[37.7618,12.5648],m:35}
+  {n:'C/da Ciavolo',ll:[37.7618,12.5648],m:35}
 ]},
 {id:'L3',num:'LINEA 3',color:'#2E8B57',name:'Marsala \u2014 Baglio Catalano',
  andata:['6:25','8:00','13:15','14:40'],af:['*','','**','**'],
@@ -187,7 +240,7 @@ feriale:[
   {n:'SS. Filippo e Giacomo',ll:[37.8390,12.5050],m:31},
   {n:'Chiesa Purgatorio',ll:[37.8410,12.5180],m:34},
   {n:'C/da Baronazzo Amafi',ll:[37.8430,12.5310],m:37},
-  {n:'Baglio Catalano (Capolinea)',ll:[37.8443,12.5437],m:40}
+  {n:'Baglio Catalano',ll:[37.8443,12.5437],m:40}
 ]},
 {id:'L4',num:'LINEA 4',color:'#8B4513',name:'Marsala \u2014 Sappusi \u2014 Birgi',
  andata:['6:35','8:00','10:45','13:15','14:40','17:00'],af:['*','','**','*','***',''],
@@ -204,7 +257,7 @@ feriale:[
   {n:'C/da S. Leonardo',ll:[37.8800,12.4760],m:33},
   {n:'C/da Birgi',ll:[37.8980,12.4830],m:37},
   {n:'Imbarc. S. Maria',ll:[37.9060,12.4870],m:40},
-  {n:'Birgi Chiesa (Capolinea)',ll:[37.9138,12.4911],m:43}
+  {n:'Birgi Chiesa',ll:[37.9138,12.4911],m:43}
 ]},
 {id:'L6',num:'LINEA 6',color:'#9B59B6',name:'Marsala \u2014 S. Padre',
  andata:['6:35','8:00','10:15','12:50','14:40','16:45'],af:['','','','','',''],
@@ -219,7 +272,7 @@ feriale:[
   {n:'Stadio Bambina',ll:[37.8380,12.4310],m:20},
   {n:'C/da Ventrischi',ll:[37.8480,12.4330],m:24},
   {n:'C/da S. Anna',ll:[37.8600,12.4400],m:28},
-  {n:'C/da Samperi / Scuola S. Padre (Capolinea)',ll:[37.8740,12.4600],m:35}
+  {n:'C/da Samperi / Scuola S. Padre',ll:[37.8740,12.4600],m:35}
 ]},
 {id:'L10',num:'LINEA 10/7',color:'#E67E22',name:'Marsala \u2014 Granatello \u2014 Cutusio',
  andata:['6:35','8:00','10:30','13:15','14:40','17:00'],af:['*','**','','***','**',''],
@@ -252,7 +305,7 @@ feriale:[
   {n:'C/da Cardilla',ll:[37.7980,12.5090],m:29},
   {n:'C/da Misilla',ll:[37.8010,12.5160],m:32},
   {n:'C/da Torrelunga Puleo',ll:[37.8050,12.5220],m:35},
-  {n:'Incrocio Paolini/Matarocco (Capolinea)',ll:[37.8098,12.5300],m:38}
+  {n:'Incrocio Paolini / Matarocco',ll:[37.8098,12.5300],m:38}
 ]},
 {id:'L21',num:'LINEA 21',color:'#16A085',name:'Supplemento Scuole \u2014 Linea 1',
  andata:['7:15','8:00','13:25','14:55'],af:['','','',''],
@@ -280,17 +333,21 @@ domenicale:[
   {n:'Via Trapani / Via D. Alighieri',ll:[37.8060,12.4620],m:17},
   {n:'Via Colaianni / Via Vita',ll:[37.7980,12.4750],m:22},
   {n:'C/da Amabilina',ll:[37.7960,12.4820],m:26},
-  {n:'Ospedale (Capolinea)',ll:[37.7961,12.4985],m:30}
+  {n:'Ospedale',ll:[37.7961,12.4985],m:30}
 ]}
 ]};
 
 var currentDay='feriale';
-var selected={};
+var selected={};  // { lineId: {time, dir} }
+var myStop=null;  // { lineId, stopIdx, stopName }
+var blurTimeout=null;
 
+/* ── UTILS ── */
 function toMins(t){var p=t.split(':');return parseInt(p[0])*60+(parseInt(p[1])||0);}
 function addMins(base,delta){var tot=toMins(base)+delta;return ('0'+Math.floor(tot/60)).slice(-2)+':'+('0'+(tot%60)).slice(-2);}
 function nowMins(){var n=new Date();return n.getHours()*60+n.getMinutes();}
 
+/* ── CLOCK ── */
 function updateClock(){
   var n=new Date();
   document.getElementById('clock').textContent=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);
@@ -299,22 +356,159 @@ function updateClock(){
   document.getElementById('dateStr').textContent=days[n.getDay()]+' '+n.getDate()+' '+months[n.getMonth()]+' '+n.getFullYear();
 }
 
+/* ── TICKER ── */
 function updateTicker(){
-  var lines=LINES[currentDay];var now=nowMins();var best=null,bestLine=null;
-  for(var i=0;i<lines.length;i++){for(var j=0;j<lines[i].andata.length;j++){var m=toMins(lines[i].andata[j]);if(m>now&&(best===null||m<best)){best=m;bestLine=lines[i];}}}
+  var lines=LINES[currentDay];var now=nowMins();var best=null,bestLine=null,bestStop=null;
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    // find stop offset if myStop is set for this line
+    var offset=0;
+    if(myStop&&myStop.lineId===l.id)offset=l.stops[myStop.stopIdx].m;
+    for(var j=0;j<l.andata.length;j++){
+      var m=toMins(l.andata[j])+offset;
+      if(m>now&&(best===null||m<best)){best=m;bestLine=l;bestStop=myStop&&myStop.lineId===l.id?myStop.stopName:null;}
+    }
+  }
   var el=document.getElementById('tickerText');
   if(!bestLine){el.textContent='Nessuna corsa disponibile nelle prossime ore.';return;}
-  el.textContent=bestLine.name+' \u00b7 ore '+('0'+Math.floor(best/60)).slice(-2)+':'+('0'+(best%60)).slice(-2)+' \u00b7 tra '+(best-nowMins())+' min';
+  var h=('0'+Math.floor(best/60)).slice(-2),mi=('0'+(best%60)).slice(-2);
+  var loc=bestStop?' a '+bestStop:'';
+  el.textContent=bestLine.name+' \u00b7 ore '+h+':'+mi+loc+' \u00b7 tra '+(best-nowMins())+' min';
 }
 
+/* ── DAY SWITCH ── */
 function switchDay(d,btn){
-  currentDay=d;
+  currentDay=d;myStop=null;selected={};
   document.querySelectorAll('.day-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   document.getElementById('sectionLabel').textContent=d==='feriale'?'\u2014 Linee feriali (Lun\u2013Sab) \u2014':'\u2014 Servizio domenicale / festivo \u2014';
-  selected={};render();updateTicker();
+  document.getElementById('stopBanner').style.display='none';
+  render();updateTicker();
 }
 
+/* ── MY STOP ── */
+function setMyStop(lineId,stopIdx,stopName){
+  myStop={lineId:lineId,stopIdx:stopIdx,stopName:stopName};
+  document.getElementById('stopBannerName').textContent=stopName;
+  document.getElementById('stopBanner').style.display='flex';
+  document.getElementById('searchInput').value='';
+  hideSuggestions();
+  selected={};
+  render();updateTicker();
+}
+
+function clearMyStop(){
+  myStop=null;
+  document.getElementById('stopBanner').style.display='none';
+  render();updateTicker();
+}
+
+/* ── SEARCH / SUGGESTIONS ── */
+function normalize(s){return s.toLowerCase().replace(/[\/\-\.]/g,' ');}
+
+function buildSuggestions(q){
+  if(!q||q.length<2)return[];
+  var nq=normalize(q);
+  var results=[];
+  // Lines
+  var lines=LINES[currentDay];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(normalize(l.name).indexOf(nq)>-1||l.num.toLowerCase().indexOf(nq)>-1){
+      results.push({type:'line',label:l.name,sub:l.num,lineId:l.id});
+    }
+  }
+  // Stops — deduplicate by stop name
+  var seenStops={};
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    for(var j=0;j<l.stops.length;j++){
+      var s=l.stops[j];
+      if(normalize(s.n).indexOf(nq)>-1){
+        var key=s.n+'|'+l.id;
+        if(!seenStops[key]){
+          seenStops[key]=true;
+          results.push({type:'stop',label:s.n,sub:l.num+' \u2014 '+l.name,lineId:l.id,stopIdx:j,stopName:s.n});
+        }
+      }
+    }
+  }
+  return results;
+}
+
+function onSearchInput(){
+  var q=document.getElementById('searchInput').value.trim();
+  var sug=buildSuggestions(q);
+  if(sug.length>0){
+    renderSuggestions(sug);
+    showSuggestions();
+  } else {
+    hideSuggestions();
+  }
+  render();
+}
+
+function onSearchFocus(){
+  var q=document.getElementById('searchInput').value.trim();
+  if(q.length>=2){
+    var sug=buildSuggestions(q);
+    if(sug.length>0){renderSuggestions(sug);showSuggestions();}
+  }
+}
+
+function onSearchBlur(){
+  blurTimeout=setTimeout(hideSuggestions,180);
+}
+
+function showSuggestions(){document.getElementById('suggestions').classList.add('show');}
+function hideSuggestions(){document.getElementById('suggestions').classList.remove('show');}
+
+function renderSuggestions(sug){
+  var hasLine=sug.some(function(s){return s.type==='line';});
+  var hasStop=sug.some(function(s){return s.type==='stop';});
+  var html='';
+  if(hasLine){html+='<div class="sug-section">Linee</div>';}
+  for(var i=0;i<sug.length;i++){
+    var s=sug[i];
+    if(s.type==='line'){
+      if(hasStop&&i>0&&sug[i-1].type==='line'&&i===sug.filter(function(x){return x.type==='line';}).length)html+='';
+      html+='<div class="sug-item" onclick="pickLineSuggestion(\''+s.lineId+'\')">'+
+        '<span class="sug-item-icon">🚌</span>'+
+        '<div><div class="sug-item-main">'+s.label+'</div><div class="sug-item-sub">'+s.sub+'</div></div>'+
+      '</div>';
+    }
+  }
+  if(hasStop){html+='<div class="sug-section">Fermate</div>';}
+  for(var i=0;i<sug.length;i++){
+    var s=sug[i];
+    if(s.type==='stop'){
+      html+='<div class="sug-item" onclick="pickStopSuggestion(\''+s.lineId+'\','+s.stopIdx+',\''+escQ(s.stopName)+'\')">'+
+        '<span class="sug-item-icon">📍</span>'+
+        '<div><div class="sug-item-main">'+s.label+'</div><div class="sug-item-sub">'+s.sub+'</div></div>'+
+      '</div>';
+    }
+  }
+  document.getElementById('suggestions').innerHTML=html;
+}
+
+function escQ(s){return s.replace(/'/g,"\\'");}
+
+function pickLineSuggestion(lineId){
+  clearTimeout(blurTimeout);
+  hideSuggestions();
+  document.getElementById('searchInput').value='';
+  // open that card
+  var card=document.getElementById('card-'+lineId);
+  if(card){card.classList.add('open');card.scrollIntoView({behavior:'smooth',block:'start'});}
+  render();
+}
+
+function pickStopSuggestion(lineId,stopIdx,stopName){
+  clearTimeout(blurTimeout);
+  setMyStop(lineId,stopIdx,stopName);
+}
+
+/* ── CARD TOGGLE ── */
 function toggleCard(id){document.getElementById('card-'+id).classList.toggle('open');}
 
 function selectTime(lineId,time,dir){
@@ -323,22 +517,20 @@ function selectTime(lineId,time,dir){
   render(true);
 }
 
+/* ── MAP ── */
 function toggleMap(btn,lineId){
   btn.classList.toggle('open');
   if(btn.classList.contains('open')){setTimeout(function(){drawMap(lineId,'andata');},40);}
 }
-
 function switchMapDir(lineId,dir,tabEl){
   tabEl.closest('.map-section').querySelectorAll('.map-dir-tab').forEach(function(t){t.classList.remove('active');});
   tabEl.classList.add('active');
   drawMap(lineId,dir);
 }
-
 function drawMap(lineId,dir){
   var canvas=document.getElementById('canvas-'+lineId);
   if(!canvas)return;
-  var line=null;
-  var lines=LINES[currentDay];
+  var line=null;var lines=LINES[currentDay];
   for(var i=0;i<lines.length;i++){if(lines[i].id===lineId){line=lines[i];break;}}
   if(!line)return;
   var dpr=window.devicePixelRatio||1;
@@ -346,100 +538,118 @@ function drawMap(lineId,dir){
   var H=Math.round(W*0.54);
   canvas.width=W*dpr;canvas.height=H*dpr;
   canvas.style.width=W+'px';canvas.style.height=H+'px';
-  var ctx=canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-
+  var ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
   var stops=line.stops;
-  var lats=stops.map(function(s){return s.ll[0];});
-  var lngs=stops.map(function(s){return s.ll[1];});
+  var lats=stops.map(function(s){return s.ll[0];}),lngs=stops.map(function(s){return s.ll[1];});
   var minLat=Math.min.apply(null,lats),maxLat=Math.max.apply(null,lats);
   var minLng=Math.min.apply(null,lngs),maxLng=Math.max.apply(null,lngs);
-  var pad=44;
-  var rangeX=maxLng-minLng||0.001,rangeY=maxLat-minLat||0.001;
+  var pad=44,rangeX=maxLng-minLng||0.001,rangeY=maxLat-minLat||0.001;
   var scX=(W-pad*2)/rangeX,scY=(H-pad*2)/rangeY,sc=Math.min(scX,scY);
   var offX=(W-rangeX*sc)/2,offY=(H-rangeY*sc)/2;
   function toXY(ll){return{x:offX+(ll[1]-minLng)*sc,y:H-(offY+(ll[0]-minLat)*sc)};}
   var pts=stops.map(function(s){return toXY(s.ll);});
-
   ctx.fillStyle='#f0ebe1';ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=1;
   for(var i=1;i<8;i++){ctx.beginPath();ctx.moveTo(W/8*i,0);ctx.lineTo(W/8*i,H);ctx.stroke();}
   for(var i=1;i<6;i++){ctx.beginPath();ctx.moveTo(0,H/6*i);ctx.lineTo(W,H/6*i);ctx.stroke();}
-
-  // shadow
   ctx.beginPath();ctx.moveTo(pts[0].x+2,pts[0].y+2);
   for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i].x+2,pts[i].y+2);
   ctx.strokeStyle='rgba(0,0,0,0.1)';ctx.lineWidth=5;ctx.lineJoin='round';ctx.lineCap='round';
   if(dir==='ritorno')ctx.setLineDash([10,6]);ctx.stroke();ctx.setLineDash([]);
-
-  // route
   ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
   for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
   ctx.strokeStyle=line.color;ctx.lineWidth=4;ctx.lineJoin='round';ctx.lineCap='round';
   if(dir==='ritorno')ctx.setLineDash([10,6]);ctx.stroke();ctx.setLineDash([]);
-
-  // arrow
   if(pts.length>2){
-    var mid=Math.floor(pts.length/2);
-    var p1=pts[mid-1],p2=pts[mid];
+    var mid=Math.floor(pts.length/2);var p1=pts[mid-1],p2=pts[mid];
     var ang=Math.atan2(p2.y-p1.y,p2.x-p1.x);
     ctx.save();ctx.translate((p1.x+p2.x)/2,(p1.y+p2.y)/2);ctx.rotate(ang);
     ctx.fillStyle=line.color;ctx.beginPath();ctx.moveTo(8,0);ctx.lineTo(-5,5);ctx.lineTo(-5,-5);ctx.closePath();ctx.fill();ctx.restore();
   }
-
-  // stops
+  // highlight myStop if it's this line
+  var myStopIdx=(myStop&&myStop.lineId===lineId)?myStop.stopIdx:-1;
   for(var i=0;i<pts.length;i++){
-    var p=pts[i];var isEnd=i===0||i===pts.length-1;var r=isEnd?9:6;
+    var p=pts[i];var isEnd=i===0||i===pts.length-1;var isMy=i===myStopIdx;
+    var r=isMy?11:isEnd?9:6;
     ctx.beginPath();ctx.arc(p.x,p.y,r+1,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.12)';ctx.fill();
     ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
-    ctx.fillStyle=isEnd?line.color:'#fff';ctx.strokeStyle=line.color;ctx.lineWidth=2.5;ctx.fill();ctx.stroke();
-    var raw=stops[i].n.replace(' (Capolinea)','').split('/')[0].trim();
+    ctx.fillStyle=isMy?'#F5C842':isEnd?line.color:'#fff';
+    ctx.strokeStyle=isMy?'#C8952A':line.color;ctx.lineWidth=isMy?3:2.5;ctx.fill();ctx.stroke();
+    if(isMy){ctx.beginPath();ctx.arc(p.x,p.y,r+4,0,Math.PI*2);ctx.strokeStyle='rgba(245,200,66,0.4)';ctx.lineWidth=2;ctx.stroke();}
+    var raw=stops[i].n.split('/')[0].trim();
     var label=raw.length>20?raw.slice(0,18)+'\u2026':raw;
-    ctx.font=(isEnd?'bold ':'')+' 9px sans-serif';
+    ctx.font=(isEnd||isMy?'bold ':'')+' 9px sans-serif';
     var tw=ctx.measureText(label).width;
     var lx=p.x,ly=p.y+(i%2===0?-13:16);
     var align=p.x>W*0.72?'right':p.x<W*0.28?'left':'center';
     ctx.textAlign=align;
     var bx=align==='center'?lx-tw/2-2:align==='right'?lx-tw-2:lx-2;
-    ctx.fillStyle='rgba(250,243,232,0.9)';ctx.fillRect(bx,ly-9,tw+4,13);
-    ctx.fillStyle=isEnd?line.color:'#444';ctx.fillText(label,lx,ly);
+    ctx.fillStyle=isMy?'rgba(245,200,66,0.9)':'rgba(250,243,232,0.9)';ctx.fillRect(bx,ly-9,tw+4,13);
+    ctx.fillStyle=isMy?'#7a5000':isEnd?line.color:'#444';ctx.fillText(label,lx,ly);
   }
 }
 
-function buildStopList(line,selTime,selDir){
+/* ── STOP LIST ── */
+function buildStopList(line,selTime,selDir,myStopIdx){
   if(!selTime)return '<div class="hint">\uD83D\uDC46 Tocca un orario per vedere le fermate con gli orari</div>';
   var now=nowMins();var depM=toMins(selTime);
-  var html='<div class="stops-header">Fermate \u00b7 Partenza '+selTime+'</div>';
-  for(var i=0;i<line.stops.length;i++){
+  var html='<div class="stops-header">Fermate \u00b7 Partenza '+selTime+(myStopIdx>=0?' \u00b7 La tua fermata: '+line.stops[myStopIdx].n:'')+'</div>';
+  // only show stops from myStopIdx onwards if set
+  var startIdx=myStopIdx>=0?myStopIdx:0;
+  for(var i=startIdx;i<line.stops.length;i++){
     var s=line.stops[i];
     var arrTime=addMins(selTime,s.m);
     var arrM=depM+s.m;
     var isPast=arrM<now;
-    var isFirst=i===0,isLast=i===line.stops.length-1;
-    var isNext=!isPast&&(i===0||(depM+line.stops[i-1].m)<now);
-    var dotSize=isFirst||isLast?12:8;
-    var dotColor=isNext?'#F5C842':(isFirst||isLast)?line.color:'#fff';
+    var isFirst=i===startIdx,isLast=i===line.stops.length-1;
+    var isNext=!isPast&&(i===startIdx||(depM+line.stops[i-1].m)<now);
+    var isMy=i===myStopIdx;
+    var dotSize=isFirst||isLast||isMy?12:8;
+    var dotColor=isMy?'#F5C842':isNext?'#F5C842':(isFirst||isLast)?line.color:'#fff';
+    var dotBorder=isMy?'#C8952A':line.color;
     html+='<div class="stop-row" style="opacity:'+(isPast?0.38:1)+'">'+
       '<div class="stop-line-col">'+
-        '<div class="stop-dot" style="width:'+dotSize+'px;height:'+dotSize+'px;background:'+dotColor+';border-color:'+line.color+';'+(isNext?'box-shadow:0 0 0 3px '+line.color+'33;':'')+'"></div>'+
+        '<div class="stop-dot" style="width:'+dotSize+'px;height:'+dotSize+'px;background:'+dotColor+';border-color:'+dotBorder+';'+(isNext&&!isMy?'box-shadow:0 0 0 3px '+line.color+'33;':isMy?'box-shadow:0 0 0 3px rgba(245,200,66,0.4);':'')+'"></div>'+
         (!isLast?'<div class="stop-connector" style="background:'+line.color+'33"></div>':'')+
       '</div>'+
-      '<div class="stop-name-cell'+(isNext?' nxt':'')+'">'+
-        s.n.replace(' (Capolinea)','')+
-        (isFirst?'<span class="stop-tag" style="background:'+line.color+'">PARTENZA</span>':'')+
+      '<div class="stop-name-cell'+(isMy?' your-stop-row':isNext?' nxt':'')+'">'+
+        s.n+
+        (isMy?'<span class="stop-tag" style="background:#C8952A">\uD83D\uDCCD TUA FERMATA</span>':'')+
+        (isFirst&&!isMy?'<span class="stop-tag" style="background:'+line.color+'">PARTENZA</span>':'')+
         (isLast?'<span class="stop-tag" style="background:#555">CAPOLINEA</span>':'')+
       '</div>'+
-      '<div class="stop-time-cell" style="color:'+(isNext?line.color:isPast?'#bbb':'#1A1208')+'">'+arrTime+'</div>'+
+      '<div class="stop-time-cell" style="color:'+(isMy?'#C8952A':isNext?line.color:isPast?'#bbb':'#1A1208')+'">'+arrTime+'</div>'+
     '</div>';
   }
   return html;
 }
 
+/* ── RENDER ── */
 function render(keepOpen){
   var q=document.getElementById('searchInput').value.toLowerCase().trim();
   var now=nowMins();
-  var lines=LINES[currentDay].filter(function(l){return !q||l.name.toLowerCase().indexOf(q)>-1||l.num.toLowerCase().indexOf(q)>-1;});
-  if(!lines.length){document.getElementById('cards').innerHTML='<div style="text-align:center;padding:60px 20px;color:#bbb;font-size:16px">Nessuna linea trovata.</div>';return;}
+
+  // Filter: line name/num, or stop names
+  var lines=LINES[currentDay].filter(function(l){
+    if(!q)return true;
+    var nq=normalize(q);
+    if(normalize(l.name).indexOf(nq)>-1||l.num.toLowerCase().indexOf(nq)>-1)return true;
+    // check stops
+    for(var i=0;i<l.stops.length;i++){
+      if(normalize(l.stops[i].n).indexOf(nq)>-1)return true;
+    }
+    return false;
+  });
+
+  // If myStop is set, only show that line
+  if(myStop){
+    lines=LINES[currentDay].filter(function(l){return l.id===myStop.lineId;});
+  }
+
+  if(!lines.length){
+    document.getElementById('cards').innerHTML='<div style="text-align:center;padding:60px 20px;color:#bbb;font-size:16px">Nessuna linea trovata per "'+q+'".</div>';
+    return;
+  }
 
   var openSet=new Set();
   if(keepOpen)document.querySelectorAll('.card.open').forEach(function(c){openSet.add(c.id);});
@@ -450,19 +660,42 @@ function render(keepOpen){
   for(var li=0;li<lines.length;li++){
     var l=lines[li];
     var sel=selected[l.id];
-    var nextA=null;
-    for(var i=0;i<l.andata.length;i++){if(toMins(l.andata[i])>now){nextA=l.andata[i];break;}}
-    var nextBadge=nextA?'<span class="next-badge">'+nextA+'</span>':'<span class="next-badge gone">Fine corse</span>';
 
+    // myStop offset for this line
+    var myStopIdx=(myStop&&myStop.lineId===l.id)?myStop.stopIdx:-1;
+    var stopOffset=myStopIdx>=0?l.stops[myStopIdx].m:0;
+
+    // next departure from user's stop
+    var nextA=null;
+    for(var i=0;i<l.andata.length;i++){
+      if(toMins(l.andata[i])+stopOffset>now){nextA=l.andata[i];break;}
+    }
+
+    // adjusted display time for chip
+    function chipTime(t){
+      return myStopIdx>=0?addMins(t,stopOffset):t;
+    }
+
+    var subLabel=myStopIdx>=0
+      ?'Da: '+myStop.stopName
+      :'Partenza \u00b7 Piazza del Popolo';
+
+    var nextBadge=nextA
+      ?'<span class="next-badge">'+chipTime(nextA)+'</span>'
+      :'<span class="next-badge gone">Fine corse</span>';
+
+    // chips — show adjusted time at user's stop
     function makeChips(times,flags,dir){
       var h='';
       for(var i=0;i<times.length;i++){
-        var t=times[i];var m=toMins(t);
+        var t=times[i];
+        var dispTime=chipTime(t);
+        var dispM=toMins(t)+stopOffset;
         var cls='t-chip';
         if(t===nextA&&dir==='andata')cls+=' current';
-        if(m<now)cls+=' past';
+        if(dispM<now)cls+=' past';
         if(sel&&sel.time===t&&sel.dir===dir)cls+=' selected';
-        h+='<div class="'+cls+'" onclick="event.stopPropagation();selectTime(\''+l.id+'\',\''+t+'\',\''+dir+'\')">'+t+'<sup>'+flags[i]+'</sup></div>';
+        h+='<div class="'+cls+'" onclick="event.stopPropagation();selectTime(\''+l.id+'\',\''+t+'\',\''+dir+'\')">'+dispTime+'<sup>'+flags[i]+'</sup></div>';
       }
       return h;
     }
@@ -470,13 +703,16 @@ function render(keepOpen){
     var notesHtml='';
     if(l.notes.length){notesHtml='<div class="notes-box">'+l.notes.map(function(n){return '<p>'+n+'</p>';}).join('')+'</div>';}
 
-    var wasOpen=openSet.has('card-'+l.id);
+    var wasOpen=keepOpen?openSet.has('card-'+l.id):myStop!=null;
     var mapWasOpen=openMaps[l.id];
 
     html+='<div class="card'+(wasOpen?' open':'')+'" id="card-'+l.id+'">'+
       '<div class="card-head" onclick="toggleCard(\''+l.id+'\')">'+
         '<div class="card-num" style="background:'+l.color+'">'+l.num+'</div>'+
-        '<div class="card-info"><div class="card-title">'+l.name+'</div><div class="card-sub">Partenza \u00b7 Piazza del Popolo</div></div>'+
+        '<div class="card-info">'+
+          '<div class="card-title">'+l.name+'</div>'+
+          '<div class="card-sub'+(myStopIdx>=0?' your-stop':'')+'">'+subLabel+'</div>'+
+        '</div>'+
         '<div class="card-next-wrap">'+nextBadge+'</div>'+
         '<div class="card-arrow">\u203a</div>'+
       '</div>'+
@@ -485,7 +721,7 @@ function render(keepOpen){
           '<div><div class="tt-dir-label dir-a">\u2197 Andata</div><div class="times-row">'+makeChips(l.andata,l.af,'andata')+'</div></div>'+
           (l.ritorno.length?'<div><div class="tt-dir-label dir-r">\u2199 Ritorno</div><div class="times-row">'+makeChips(l.ritorno,l.rf,'ritorno')+'</div></div>':'<div></div>')+
         '</div>'+
-        '<div class="stops-section">'+buildStopList(l,sel?sel.time:null,sel?sel.dir:'andata')+'</div>'+
+        '<div class="stops-section">'+buildStopList(l,sel?sel.time:null,sel?sel.dir:'andata',myStopIdx)+'</div>'+
         notesHtml+
         '<div class="map-section" onclick="event.stopPropagation()">'+
           '<button class="map-toggle-btn'+(mapWasOpen?' open':'')+'" data-lid="'+l.id+'" onclick="toggleMap(this,\''+l.id+'\')">'+
@@ -507,6 +743,12 @@ function render(keepOpen){
       var lineId=cardId.replace('card-','');
       if(openMaps[lineId])setTimeout(function(){drawMap(lineId,'andata');},40);
     });
+  }
+  // auto draw map for myStop card
+  if(myStop&&!keepOpen){
+    setTimeout(function(){
+      var btn=document.getElementById('mapbtn-'+myStop.lineId);
+    },40);
   }
 }
 
