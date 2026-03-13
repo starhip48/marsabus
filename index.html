@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bus Marsala — Orari TPL</title>
+<meta name="description" content="Orari autobus urbani ed extraurbani di Marsala — TPL Comune di Marsala">
+<meta name="theme-color" content="#0D4F7A">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Bus%20Marsala%22%2C%22short_name%22%3A%22Bus%20Marsala%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230D4F7A%22%2C%22theme_color%22%3A%22%230D4F7A%22%2C%22description%22%3A%22Orari%20autobus%20Marsala%20TPL%22%7D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bus Marsala">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D4F7A'/%3E%3Crect x='8' y='18' width='48' height='28' rx='5' fill='%23F5C842'/%3E%3Crect x='8' y='18' width='48' height='10' rx='5' fill='%23F5C842'/%3E%3Crect x='8' y='23' width='48' height='5' fill='%23F5C842'/%3E%3Crect x='10' y='20' width='44' height='18' rx='3' fill='%230D4F7A'/%3E%3Crect x='12' y='22' width='12' height='9' rx='2' fill='%23F5C842' opacity='.9'/%3E%3Crect x='26' y='22' width='12' height='9' rx='2' fill='%23F5C842' opacity='.9'/%3E%3Crect x='40' y='22' width='10' height='9' rx='2' fill='%23F5C842' opacity='.9'/%3E%3Crect x='9' y='38' width='46' height='6' rx='2' fill='%230D4F7A'/%3E%3Ccircle cx='18' cy='47' r='5' fill='%23fff'/%3E%3Ccircle cx='18' cy='47' r='2.5' fill='%230D4F7A'/%3E%3Ccircle cx='46' cy='47' r='5' fill='%23fff'/%3E%3Ccircle cx='46' cy='47' r='2.5' fill='%230D4F7A'/%3E%3Crect x='8' y='30' width='3' height='8' rx='1.5' fill='%23F5C842'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230D4F7A'/%3E%3Crect x='22' y='52' width='136' height='78' rx='14' fill='%23F5C842'/%3E%3Crect x='28' y='56' width='124' height='50' rx='8' fill='%230D4F7A'/%3E%3Crect x='33' y='61' width='32' height='26' rx='5' fill='%23F5C842' opacity='.95'/%3E%3Crect x='74' y='61' width='32' height='26' rx='5' fill='%23F5C842' opacity='.95'/%3E%3Crect x='115' y='61' width='28' height='26' rx='5' fill='%23F5C842' opacity='.95'/%3E%3Ccircle cx='52' cy='136' r='14' fill='%23fff'/%3E%3Ccircle cx='52' cy='136' r='7' fill='%230D4F7A'/%3E%3Ccircle cx='128' cy='136' r='14' fill='%23fff'/%3E%3Ccircle cx='128' cy='136' r='7' fill='%230D4F7A'/%3E%3Crect x='22' y='96' width='8' height='22' rx='4' fill='%23F5C842'/%3E%3Crect x='150' y='96' width='8' height='22' rx='4' fill='%23F5C842'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--sea:#0D4F7A;--sea2:#1A6FA8;--sun:#F5C842;--terra:#D45C2E;--cream:#FAF3E8;--sand:#E8D9B8;--ink:#1A1208}
+body{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column}
+
+/* HERO */
+.hero{background:var(--sea);position:relative;overflow:hidden;padding:20px 16px 16px}
+.hero-bg{position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 38px,rgba(255,255,255,.03) 38px,rgba(255,255,255,.03) 40px)}
+.hero-glow{position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.2) 0%,transparent 70%)}
+.hero-inner{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:stretch;gap:10px;flex-wrap:nowrap}
+.hero-left{flex:1;min-width:0}
+.hero-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px;flex-shrink:0}
+.hero-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sun);margin-bottom:3px;font-weight:600;white-space:nowrap}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(2rem,8vw,4rem);line-height:.88;color:#fff;letter-spacing:.01em}
+.hero-title span{color:var(--sun)}
+.hero-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:.04em}
+.hero-clock{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(1.6rem,6vw,2.4rem);color:#fff;line-height:1;text-align:right}
+.hero-date{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;text-align:right}
+.hero-btn{display:flex;align-items:center;gap:4px;border-radius:5px;padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;border:none;white-space:nowrap;transition:transform .15s,background .15s}
+.hero-btn-primary{background:var(--sun);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.hero-btn-secondary{background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.35) !important}
+.hero-btn-secondary:hover{background:rgba(255,255,255,0.25) !important}
+.hero-season{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:rgba(255,255,255,0.18);color:#fff;text-align:right;white-space:nowrap}
+
+/* TICKER */
+.ticker{display:flex;flex-direction:column}
+.ticker-incorsa{background:#fff;border-bottom:2px solid var(--sand);padding:10px 16px}
+.ticker-incorsa-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ticker-prossima{background:var(--sun);padding:8px 16px;display:flex;align-items:center;gap:8px;overflow:hidden}
+.ticker-dot{width:7px;height:7px;border-radius:50%;background:var(--ink);flex-shrink:0;animation:blink 1.4s ease-in-out infinite}
+.ticker-dot.live{background:#c0392b;animation:blink .9s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.ticker-label{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;background:var(--ink);color:var(--sun);padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.ticker-label.live-label{background:#c0392b;color:#fff}
+.ticker-text{font-weight:500;font-size:13px;color:var(--ink);letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.live-buses{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;align-items:start}
+@media(max-width:500px){.live-buses{grid-template-columns:1fr}}
+.live-chip{display:inline-flex;flex-direction:column;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:7px 11px;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;transition:all .15s;width:100%;box-sizing:border-box}
+.live-chip:hover,.live-chip:active{background:var(--sand);border-color:var(--sea)}
+.live-chip.boarding{border-color:#27ae60;background:#f0faf4}
+.live-chip.upcoming{background:#fafafa;border-color:#ddd;opacity:0.85}
+.live-chip-top{display:flex;align-items:center;gap:6px}
+.live-chip-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid rgba(0,0,0,0.2)}
+.live-chip-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px}
+.live-chip-nextstop{font-size:12px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-chip-countdown{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--sea);background:rgba(13,79,122,0.10);border-radius:5px;padding:1px 7px;white-space:nowrap;flex-shrink:0}
+.live-chip-countdown.arriving{color:#c0392b;background:rgba(192,57,43,0.10)}
+.live-chip-stops{margin-top:6px;border-top:1px solid var(--sand);padding-top:5px;display:flex;flex-direction:column;gap:2px}
+.live-stop-row{display:flex;align-items:center;gap:6px;font-size:11px;opacity:.75}
+.live-stop-row.next-stop{opacity:1;font-weight:600;color:var(--sea)}
+.live-stop-time{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;min-width:38px;text-align:right}
+.live-stop-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-stop-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:rgba(0,0,0,0.25)}
+.live-stop-dot.cur{background:var(--sea)}
+.live-none{font-size:12px;color:#aaa;font-style:italic}
+
+/* CONTROLS */
+.controls{background:var(--cream);border-bottom:2px solid var(--sand);padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:400;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-input{width:100%;border:2px solid var(--sand);border-radius:6px;padding:8px 12px 8px 36px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--sea2)}
+.search-input::placeholder{color:#aaa;font-style:italic}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;color:#aaa;pointer-events:none}
+/* search suggestions */
+.search-suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:2px solid var(--sea2);border-radius:6px;z-index:200;max-height:220px;overflow-y:auto;display:none;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.search-suggestions.show{display:block}
+.sug-item{padding:9px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--sand);display:flex;align-items:center;gap:8px}
+.sug-item:last-child{border-bottom:none}
+.sug-item:hover{background:var(--cream)}
+.sug-item-icon{font-size:11px;opacity:.5;flex-shrink:0}
+.sug-item-main{font-weight:500;color:var(--ink)}
+.sug-item-sub{font-size:11px;color:#aaa;margin-top:1px}
+.sug-section{padding:5px 14px 3px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#bbb;font-weight:600;background:var(--cream)}
+
+.day-switch{display:flex;border:2px solid var(--sand);border-radius:6px;overflow:hidden}
+.day-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border:none;cursor:pointer;background:var(--cream);color:#999;transition:all .15s;white-space:nowrap}
+.day-btn:hover{background:var(--sand);color:var(--ink)}
+.day-btn.active{background:var(--sea);color:#fff}
+
+/* YOUR STOP BANNER */
+.stop-banner{background:linear-gradient(90deg,var(--sea2),#1a7ab8);padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:fixed;bottom:0;left:0;right:0;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,0.2);padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.stop-banner-icon{font-size:16px}
+.stop-banner-text{font-size:13px;color:#fff;flex:1}
+.stop-banner-text strong{font-weight:600}
+.stop-banner-clear{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:4px 10px;cursor:pointer;transition:background .15s;white-space:nowrap}
+.stop-banner-clear:hover{background:rgba(255,255,255,.3)}
+
+/* MAIN */
+main{flex:1;max-width:860px;width:100%;margin:0 auto;padding:24px 16px 60px}
+body.has-stop-banner main{padding-bottom:90px}
+.section-label{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#bbb;font-weight:600;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--sand)}
+
+/* CARD */
+.card{background:#fff;border:2px solid var(--sand);border-radius:4px;margin-bottom:10px;overflow:visible;transition:border-color .2s,box-shadow .2s;position:relative;z-index:0}
+.card:hover{border-color:var(--sea2)}
+.card.open{border-color:var(--sea);box-shadow:4px 4px 0 rgba(13,79,122,.15)}
+.card-head{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;cursor:pointer;user-select:none}
+.card-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:#fff;padding:16px 14px;min-width:76px;text-align:center;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.card-info{padding:12px 14px}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--ink);line-height:1.2}
+.card-sub{font-size:11px;color:#aaa;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.card-sub.your-stop{color:var(--sea2);font-weight:600}
+.card-next-wrap{padding:0 12px}
+.next-badge{background:var(--sun);color:var(--ink);font-weight:700;font-size:15px;padding:4px 10px;border-radius:3px;white-space:nowrap}
+.next-badge.gone{background:var(--sand);color:#aaa;font-size:11px;letter-spacing:.1em}
+.card-arrow{padding:0 14px 0 6px;font-size:18px;color:#ccc;transition:transform .25s}
+.card.open .card-arrow{transform:rotate(90deg)}
+.card-body{display:none;border-top:2px solid var(--sand);animation:reveal .18s ease}
+.card.open .card-body{display:block}
+@keyframes reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* TIMES */
+.tt-grid{padding:16px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.tt-grid{grid-template-columns:1fr}}
+.tt-dir-label{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:3px;margin-bottom:10px}
+.dir-a{background:var(--sea2);color:#fff}
+.dir-r{background:var(--terra);color:#fff}
+.times-row{display:flex;flex-wrap:wrap;gap:6px}
+.t-chip{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;padding:6px 11px;border-radius:4px;cursor:pointer;border:1.5px solid var(--sand);background:var(--cream);color:var(--ink);transition:all .15s;line-height:1}
+.t-chip sup{font-size:9px;color:var(--terra);vertical-align:super;letter-spacing:0}
+.t-chip.current{background:var(--sun);border-color:var(--sun);color:var(--ink)}
+.t-chip.past{opacity:.38}
+.t-chip.selected{border-color:var(--sea);background:rgba(26,111,168,.1)}
+.t-chip:hover{border-color:var(--sea2)}
+
+/* STOPS */
+.stops-section{padding:0 16px;border-top:1px dashed var(--sand);margin-top:14px}
+.stops-header{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#aaa;margin:12px 0 10px;font-weight:600}
+.stop-row{display:grid;grid-template-columns:20px 1fr auto;gap:0 10px;align-items:stretch}
+.stop-line-col{display:flex;flex-direction:column;align-items:center}
+.stop-dot{border-radius:50%;flex-shrink:0;margin-top:10px;z-index:1;border-style:solid;border-width:2.5px}
+.stop-connector{width:2px;flex:1;min-height:14px}
+.stop-name-cell{padding:8px 0;font-size:13px;color:#444;line-height:1.3}
+.stop-name-cell.nxt{color:var(--ink);font-weight:600}
+.stop-name-cell.your-stop-row{color:var(--sea2);font-weight:700}
+.stop-time-cell{padding:8px 0;font-family:monospace;font-size:14px;font-weight:700;white-space:nowrap;align-self:center}
+.stop-tag{display:inline-block;font-size:10px;border-radius:3px;padding:1px 5px;letter-spacing:.08em;margin-left:6px;color:#fff}
+.hint{font-size:11px;color:#bbb;font-style:italic;padding:10px 0 6px}
+
+/* NOTES */
+.notes-box{margin:14px 16px 0;border-left:3px solid var(--sun);padding:8px 12px;background:#fffbef}
+.notes-box p{font-size:12px;color:#7a6020;line-height:1.6}
+
+/* MAP */
+.map-section{padding:14px 16px 16px;border-top:1px dashed var(--sand);margin-top:14px}
+.map-toggle-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#888;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;transition:color .15s}
+.map-toggle-btn:hover{color:var(--sea2)}
+.map-toggle-btn .arr{transition:transform .2s;display:inline-block}
+.map-toggle-btn.open{color:var(--sea)}
+.map-toggle-btn.open .arr{transform:rotate(90deg)}
+.map-dir-tabs{display:none;gap:6px;margin-top:10px;flex-wrap:wrap}
+.map-toggle-btn.open~.map-dir-tabs{display:flex}
+.map-dir-tab{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:3px;border:1.5px solid var(--sand);background:var(--cream);color:#888;cursor:pointer;transition:all .15s}
+.map-dir-tab:hover{border-color:var(--sea2);color:var(--sea2)}
+.map-dir-tab.active{background:var(--sea);color:#fff;border-color:var(--sea)}
+.map-leaflet-wrap{display:none;margin-top:10px;border:2px solid var(--sand);border-radius:10px;overflow:hidden;position:relative;box-shadow:0 2px 12px rgba(13,79,122,.10);z-index:1}
+.map-toggle-btn.open~.map-dir-tabs~.map-leaflet-wrap{display:block}
+.leaflet-map{width:100%;height:300px;border-radius:8px;background:#e8e0d0}
+@media(min-width:600px){.leaflet-map{height:360px}}
+/* Leaflet popup style override */
+.leaflet-popup-content-wrapper{border-radius:6px!important;font-family:'Barlow',sans-serif!important;font-size:13px!important;padding:0!important;overflow:hidden}
+.leaflet-popup-content{margin:0!important;padding:10px 14px!important}
+/* Route legend */
+.map-legend{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(250,243,232,.95);border-top:1.5px solid var(--sand);font-size:11px;color:#666;font-family:'Barlow',sans-serif}
+.legend-gradient{height:6px;width:60px;border-radius:3px;flex-shrink:0}
+.legend-label{font-size:10px;letter-spacing:.06em}
+canvas.route-canvas{display:none}
+
+footer{background:var(--sea);color:rgba(255,255,255,.4);text-align:center;padding:20px;font-size:11px;letter-spacing:.06em;line-height:1.8}
+@media(max-width:500px){.card-next-wrap{display:none}.card-num{min-width:64px;padding:14px 10px;font-size:12px}}
+
+
+/* LIVE MAP PANEL */
+#liveMapPanel{display:none;position:fixed;inset:0;z-index:8000;flex-direction:column;background:#f0ebe1}
+#liveMapPanel.visible{display:flex}
+#liveMapPanelHeader{background:var(--sea);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;z-index:2}
+#liveMapPanelHeader h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;flex:1;display:flex;align-items:center;gap:8px}
+#liveMapPanelHeader h2 .pulse{width:9px;height:9px;border-radius:50%;background:#ff4444;display:inline-block;animation:blink .9s ease-in-out infinite;flex-shrink:0}
+#liveMapClose{background:rgba(255,255,255,.18);border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:6px;cursor:pointer;transition:background .15s}
+#liveMapClose:hover{background:rgba(255,255,255,.3)}
+#liveMapEl{flex:1;z-index:1}
+#liveMapLegend{background:rgba(255,255,255,.95);backdrop-filter:blur(4px);padding:8px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-top:1.5px solid var(--sand);flex-shrink:0;z-index:2}
+.lm-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-family:'Barlow',sans-serif;color:var(--ink);font-weight:500}
+.lm-legend-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(0,0,0,0.15);flex-shrink:0}
+#liveMapStatus{font-size:11px;color:#888;margin-left:auto;font-style:italic}
+
+/* COORD FIX TOOL */
+#coordFixPanel{display:none;position:fixed;inset:0;z-index:9999;background:#fff;flex-direction:column}
+#coordFixPanel.visible{display:flex}
+#coordFixHeader{background:var(--sea);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+#coordFixHeader h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;flex:1}
+#coordFixClose{background:rgba(255,255,255,.2);border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;padding:6px 14px;border-radius:4px;cursor:pointer}
+#coordFixLineSelect{padding:6px 10px;font-family:'Barlow',sans-serif;font-size:13px;border:2px solid var(--sand);border-radius:4px;background:var(--cream)}
+#coordFixMap{flex:1}
+#coordFixOutput{background:#1a1208;color:#f5c842;font-family:monospace;font-size:11px;padding:10px 14px;max-height:120px;overflow-y:auto;flex-shrink:0;white-space:pre-wrap}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div><div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-left" style="cursor:pointer" onclick="window.scrollTo({top:0,behavior:'smooth'});document.getElementById('searchInput').blur()">
+      <div class="hero-eyebrow">Comune di Marsala · TPL</div>
+      <div class="hero-title">ORARI<br><span>BUS</span></div>
+      <div class="hero-sub" id="heroSub">Orario invernale · dal 15.09 al 18.06</div>
+    </div>
+    <div class="hero-right">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+        <div id="seasonBadge" class="hero-season"></div>
+        <button id="liveMapBtn" onclick="openLiveMap()" class="hero-btn hero-btn-primary">
+          <span style="font-size:13px">🚌</span> Mappa Live
+        </button>
+        <button onclick="openAstPanel()" class="hero-btn hero-btn-secondary">
+          <span style="font-size:13px">🚍</span> Extraurbani
+        </button>
+      </div>
+      <div>
+        <div class="hero-clock" id="clock">--:--</div>
+        <div class="hero-date" id="dateStr">---</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker">
+  <div class="ticker-incorsa">
+    <div class="ticker-incorsa-header">
+      <div class="ticker-dot live"></div>
+      <div class="ticker-label live-label">In corsa</div>
+    </div>
+    <div class="live-buses" id="liveBuses"><span class="live-none">Calcolo…</span></div>
+  </div>
+  <div class="ticker-prossima">
+    <div class="ticker-dot"></div>
+    <div class="ticker-label">Prossima</div>
+    <div class="ticker-text" id="tickerText">Calcolo…</div>
+    <span id="rainBadge" style="display:none"></span>
+  </div>
+</div>
+
+<div id="weatherStrip" style="background:var(--sea);border-bottom:1px solid rgba(255,255,255,0.1);padding:7px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .2s" onclick="toggleWeatherDetail()" title="Meteo a Marsala">
+  <span id="weatherIcon" style="font-size:20px">⏳</span>
+  <div style="flex:1">
+    <span id="weatherTemp" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:#fff"></span>
+    <span id="weatherDesc" style="font-family:'Barlow',sans-serif;font-size:12px;color:rgba(255,255,255,0.6);margin-left:8px"></span>
+  </div>
+  <div id="weatherExtra" style="font-family:'Barlow',sans-serif;font-size:11px;color:rgba(255,255,255,0.45);text-align:right"></div>
+  <span style="font-size:10px;color:rgba(255,255,255,0.3)">▾</span>
+</div>
+<div id="weatherDetail" style="display:none;background:var(--sea);border-bottom:2px solid rgba(255,255,255,0.08);padding:10px 18px 14px;overflow-x:auto">
+  <div id="weatherHourly" style="display:flex;gap:10px;padding-bottom:4px"></div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap" id="searchWrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" autocomplete="off"
+      placeholder="Cerca linea, destinazione o fermata…"
+      oninput="onSearchInput()" onfocus="onSearchFocus()" onblur="onSearchBlur()">
+    <div class="search-suggestions" id="suggestions"></div>
+  </div>
+  <div class="day-switch">
+    <button class="day-btn active" onclick="switchDay('feriale',this)">Lun–Sab</button>
+    <button class="day-btn" onclick="switchDay('domenicale',this)">Dom/Festivi</button>
+  </div>
+</div>
+
+<div id="stopBanner" style="display:none" class="stop-banner">
+  <span class="stop-banner-icon">📍</span>
+  <span class="stop-banner-text">Orari calcolati da: <strong id="stopBannerName"></strong></span>
+  <button class="stop-banner-clear" onclick="shareStop()" style="background:rgba(255,255,255,0.12);margin-right:4px">🔗 Condividi</button><button class="stop-banner-clear" onclick="clearMyStop()">✕ Rimuovi</button>
+</div>
+
+<main>
+  <div class="section-label" id="sectionLabel">— Linee feriali (Lun–Sab) —</div>
+  <div id="cards"></div>
+</main>
+
+<!-- ═══ AST PANEL ═══ -->
+<div id="astPanel" style="display:none;position:fixed;inset:0;z-index:9000;background:var(--ink);overflow-y:auto;-webkit-overflow-scrolling:touch">
+
+  <div style="position:sticky;top:0;z-index:10;background:var(--ink);border-bottom:2px solid rgba(245,200,66,0.25);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:26px">🚍</span>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:.06em;color:var(--sun);text-transform:uppercase">Autobus Extraurbani da Marsala</div>
+        <div style="font-family:'Barlow',sans-serif;font-size:12px;color:rgba(255,255,255,0.55)">AST · Autoservizi Salemi · <span id="astClock" style="color:rgba(255,255,255,0.7)">--:--</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+      <a href="http://www.astsicilia.it" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:5px;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.35);color:var(--sun);border-radius:6px;padding:6px 11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">🔗 AST</a>
+      <a href="https://www.autoservizisalemi.it" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:5px;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.35);color:var(--sun);border-radius:6px;padding:6px 11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">🔗 Salemi</a>
+      <button onclick="closeAstPanel()" style="background:rgba(255,255,255,0.1);border:none;border-radius:6px;color:#fff;font-size:20px;padding:6px 12px;cursor:pointer;font-family:sans-serif">&times;</button>
+    </div>
+  </div>
+
+  <!-- Next departure ticker for AST -->
+  <div id="astNextTicker" style="background:rgba(245,200,66,0.08);border-bottom:1px solid rgba(245,200,66,0.15);padding:10px 18px;font-family:'Barlow',sans-serif;font-size:13px;color:rgba(255,255,255,0.7)">
+    <span style="color:var(--sun);font-weight:700">Prossima corsa AST ›</span> <span id="astNextText">Calcolo…</span>
+  </div>
+
+  <!-- Route tabs -->
+  <div style="display:flex;gap:0;overflow-x:auto;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.08);padding:0 12px" id="astTabs"></div>
+
+  <!-- Route content -->
+  <div id="astRouteContent" style="padding:16px 14px;max-width:700px;margin:0 auto"></div>
+
+  <!-- Disclaimer -->
+  <div style="padding:16px 18px;font-family:'Barlow',sans-serif;font-size:11px;color:rgba(255,255,255,0.35);border-top:1px solid rgba(255,255,255,0.08);margin-top:8px">
+    ⚠️ Orari tratti dai documenti ufficiali AST Trapani (in vigore dal 08/01/2026) e Autoservizi Salemi (ed. 05/01/2026). Gli orari possono subire variazioni — verificare sempre prima di partire.<br>
+    🔗 <a href="http://www.astsicilia.it" target="_blank" style="color:rgba(245,200,66,0.6);text-decoration:none">astsicilia.it</a> &nbsp;·&nbsp;
+    <a href="https://www.autoservizisalemi.it" target="_blank" style="color:rgba(245,200,66,0.6);text-decoration:none">autoservizisalemi.it</a> &nbsp;·&nbsp;
+    AST Trapani: <strong style="color:rgba(255,255,255,0.5)">0923 21021</strong> &nbsp;·&nbsp; Salemi: <strong style="color:rgba(255,255,255,0.5)">0923 981120</strong>
+  </div>
+</div>
+
+<footer>
+  Comune di Marsala · Servizio Comunale di Trasporto Pubblico Locale<br>
+  ⚠ Orario provvisorio — soggetto a variazioni per guasti o assenza di personale.<br>
+  🗓 Orario estivo: 19 Giu – 14 Set · Orario invernale: 15 Set – 18 Giu<br><br>
+  <span style="opacity:.55;font-size:10px;letter-spacing:.04em">
+    Questo è un sito web non ufficiale, realizzato a titolo personale per uso informativo.<br>
+    Non sono in alcun modo affiliato, associato o rappresentante del Comune di Marsala,<br>
+    di AST – Azienda Siciliana Trasporti, né di Autoservizi Salemi.<br>
+    Non sono uno sviluppatore software né un professionista del settore dei trasporti.<br>
+    Gli orari riportati sono tratti da documenti pubblici ufficiali ma potrebbero non essere aggiornati.<br>
+    Verificare sempre le informazioni presso le fonti ufficiali prima di mettersi in viaggio.
+  </span>
+</footer>
+
+<script>
+
+/* ═══════════════════════════════════════════
+   SEASONAL SCHEDULE LOGIC
+   Summer: 19 June → 14 September (each year)
+   Winter: 15 September → 18 June (each year)
+   ═══════════════════════════════════════════ */
+function isSummer(){
+  var now=new Date();
+  var m=now.getMonth()+1; // 1-12
+  var d=now.getDate();
+  // Summer: June 19 to September 14 inclusive
+  if(m>6&&m<9)return true;
+  if(m===6&&d>=19)return true;
+  if(m===9&&d<=14)return true;
+  return false;
+}
+
+var LINES_INVERNALE={
+feriale:[
+{id:'L1',num:'LINEA 1',color:'#1A6FA8',name:'Marsala — Torreggiano — Petrosino',
+ andata:['6:25','8:00','10:40','12:50','14:40','17:00'],af:['','**','*','','','*'],
+ ritorno:['7:05','8:45','11:10','13:35','15:25','17:30'],rf:['','**','*','','','*'],
+ notes:['8:00** prolunga per Istituto Geometra','10:40* e 17:00* Bivio Triglia SS.115'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'P.zza Caprera',ll:[37.7985,12.4348],m:3},
+  {n:'C/da Ponte',ll:[37.7870,12.4438],m:8},
+  {n:'Lungomare Mediterraneo',ll:[37.7830,12.4420],m:13},
+  {n:'Rotonda Signorino',ll:[37.7748,12.4438],m:17},
+  {n:'C/da Fossarunza',ll:[37.7672,12.4482],m:21},
+  {n:'C/da Torreggiano',ll:[37.7592,12.4530],m:25},
+  {n:'Via U. La Malfa',ll:[37.7528,12.458],m:29},
+  {n:'V. Triglia Scaletta',ll:[37.7448,12.4638],m:33},
+  {n:'C/da S. Giuseppe',ll:[37.7378,12.4698],m:37},
+  {n:'C/da Biscione',ll:[37.7308,12.4758],m:40}
+]},
+{id:'L2',num:'LINEA 2/5',color:'#D45C2E',name:'Marsala — Ciancio — Ciavolo',
+ andata:['6:35','8:00','10:15','12:50','14:40','16:45'],af:['','','','','',''],
+ ritorno:['7:10','8:45','11:00','13:35','15:25','17:30'],rf:['','','','','',''],
+ notes:[],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'P.zza Caprera',ll:[37.7985,12.4345],m:3},
+  {n:'Via N. Bixio',ll:[37.7982,12.4415],m:6},
+  {n:'Via Salemi',ll:[37.7960,12.4490],m:9},
+  {n:'Via Reg. Siciliana',ll:[37.7940,12.4580],m:12},
+  {n:'Via Tunisi',ll:[37.7880,12.4680],m:16},
+  {n:'C/da Ciancio',ll:[37.7800,12.4800],m:20},
+  {n:'C/da Digerbato',ll:[37.7720,12.4950],m:24},
+  {n:'C/da Ciavolotto',ll:[37.7660,12.5200],m:29},
+  {n:'C/da Ciavolo',ll:[37.7618,12.5648],m:35}
+]},
+{id:'L3',num:'LINEA 3',color:'#2E8B57',name:'Marsala — Baglio Catalano',
+ andata:['6:25','8:00','13:15','14:40'],af:['*','','**','**'],
+ ritorno:['7:00','8:45','13:50','15:15'],rf:['*','','**','**'],
+ notes:['6:25* al ritorno transita dai Licei','13:15** e 14:40** in andata transita dai licei Sappusi'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla',ll:[37.8000,12.4380],m:3},
+  {n:'V.le Isonzo',ll:[37.8030,12.4420],m:6},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:10},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:13},
+  {n:'C/da S. Venera',ll:[37.8220,12.4650],m:18},
+  {n:'C/da Fontanelle',ll:[37.8290,12.4750],m:22},
+  {n:'C/da Rakalia',ll:[37.8360,12.4880],m:27},
+  {n:'SS. Filippo e Giacomo',ll:[37.8390,12.5050],m:31},
+  {n:'Chiesa Purgatorio',ll:[37.8410,12.5180],m:34},
+  {n:'C/da Baronazzo Amafi',ll:[37.8430,12.5310],m:37},
+  {n:'Baglio Catalano',ll:[37.8443,12.5437],m:40}
+]},
+{id:'L4',num:'LINEA 4',color:'#8B4513',name:'Marsala — Sappusi — Birgi',
+ andata:['6:35','8:00','10:45','13:15','14:40','17:00'],af:['*','','**','*','***',''],
+ ritorno:['7:10','8:45','11:15','13:50','15:25','17:40'],rf:['*','','**','*','***',''],
+ notes:['6:35* e 13:15* al ritorno ai licei Sappusi','10:45** arriva Casello Bonetto','14:40*** aspetta uscita alunni licei Sappusi'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'V.ggio Sappusi',ll:[37.8160,12.4600],m:13},
+  {n:'C/da Giunchi',ll:[37.8300,12.4650],m:18},
+  {n:'SP. 21',ll:[37.8500,12.4700],m:24},
+  {n:'C/da Spagnola',ll:[37.8680,12.4720],m:29},
+  {n:'C/da S. Leonardo',ll:[37.8800,12.4760],m:33},
+  {n:'C/da Birgi',ll:[37.8980,12.4830],m:37},
+  {n:'Imbarc. S. Maria',ll:[37.9060,12.4870],m:40},
+  {n:'Birgi Chiesa',ll:[37.9138,12.4911],m:43}
+]},
+{id:'L6',num:'LINEA 6',color:'#9B59B6',name:'Marsala — S. Padre',
+ andata:['6:35','8:00','10:15','12:50','14:40','16:45'],af:['','','','','',''],
+ ritorno:['7:10','8:45','11:00','13:35','15:20','17:30'],rf:['','','','','',''],
+ notes:[],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mazzini',ll:[37.7992,12.4365],m:2},
+  {n:'P.zza F. Pizzo',ll:[37.8014,12.4362],m:5},
+  {n:'Via Fazio / C.so Calatafimi',ll:[37.8072,12.4368],m:9},
+  {n:'C/da Ponte / Via Bue Morto',ll:[37.8152,12.4380],m:14},
+  {n:'Stadio Bambina',ll:[37.8382,12.4410],m:20},
+  {n:'C/da Ventrischi',ll:[37.8480,12.4430],m:24},
+  {n:'C/da S. Anna',ll:[37.8600,12.4480],m:28},
+  {n:'C/da Samperi / Scuola S. Padre',ll:[37.8742,12.4620],m:35}
+]},
+{id:'L10',num:'LINEA 10/7',color:'#E67E22',name:'Marsala — Granatello — Cutusio',
+ andata:['6:35','8:00','10:30','13:15','14:40','17:00'],af:['*','**','','***','**',''],
+ ritorno:['7:10','8:45','11:10','13:50','15:20','17:40'],rf:['*','**','','***','**',''],
+ notes:['6:35* al ritorno transita dai Licei','8:00 e 14:40** in andata transita dai Licei','13:15*** in andata e ritorno transita dai Licei'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:12},
+  {n:'C/da S. Venera',ll:[37.8220,12.4650],m:17},
+  {n:'C/da Addolorata',ll:[37.8360,12.4820],m:22},
+  {n:'C/da Bosco',ll:[37.8500,12.4950],m:27},
+  {n:'Granatello',ll:[37.8660,12.5100],m:32},
+  {n:'Bivio Ragattisi',ll:[37.8730,12.5200],m:35},
+  {n:'Capolinea Cutusio',ll:[37.8758,12.5283],m:38}
+]},
+{id:'L13',num:'LINEA 13/8',color:'#C0392B',name:'Marsala — Amabilina — Ospedale — Matarocco',
+ andata:['6:35','8:00','9:45','10:45','13:15','14:40','16:00','17:10'],af:['*','****','**','**','***','****','**',''],
+ ritorno:['7:10','8:45','10:15','11:15','13:55','15:20','16:30','17:40'],rf:['*','****','**','**','***','****','**',''],
+ notes:['6:35* al ritorno transita dai Licei','9:45 · 10:45 · 16:00** capolinea Ospedale','13:15*** in andata e ritorno transita dai Licei Sappusi','8:00 e 14:40**** in andata transita dai Licei Sappusi'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / C.so Gramsci',ll:[37.8090,12.4510],m:7},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:11},
+  {n:'Via D. Alighieri',ll:[37.8060,12.4620],m:15},
+  {n:'Via Colaianni / Via Vita',ll:[37.7980,12.4750],m:19},
+  {n:'C/da Amabilina',ll:[37.7960,12.4820],m:22},
+  {n:'Ospedale Paolo Borsellino',ll:[37.7961,12.4985],m:26},
+  {n:'C/da Cardilla',ll:[37.7980,12.5090],m:29},
+  {n:'C/da Misilla',ll:[37.8010,12.5160],m:32},
+  {n:'C/da Torrelunga Puleo',ll:[37.8050,12.5220],m:35},
+  {n:'Incrocio Paolini / Matarocco',ll:[37.8098,12.5300],m:38}
+]},
+{id:'L21',num:'LINEA 21',color:'#16A085',name:'Supplemento Scuole — Linea 1',
+ andata:['7:15','8:00','13:25','14:55'],af:['','','',''],
+ ritorno:[],rf:[],
+ notes:['⚠ Il sabato viene esclusa la Linea 21 (Suppl. scuole)'],
+ stops:[
+  {n:'Via U. La Malfa',ll:[37.7528,12.458],m:0},
+  {n:'Via dei Platani',ll:[37.7592,12.4528],m:4},
+  {n:'B. Triglia / Strasatti',ll:[37.775,12.4442],m:9},
+  {n:'C/da Cuore di Gesù',ll:[37.7822,12.4418],m:13},
+  {n:'Via Pastorella / Via Bue Morto',ll:[37.7932,12.4378],m:17},
+  {n:'Autostazione (Marsala)',ll:[37.7966,12.4352],m:22}
+]}
+],
+domenicale:[
+{id:'LD',num:'DOM/FEST',color:'#1A6FA8',name:'Marsala — Sappusi — Amabilina — Ospedale',
+ andata:['8:00','9:30','10:45','12:00'],af:['','','',''],
+ ritorno:['8:45','10:15','11:30','12:45'],rf:['','','',''],
+ notes:['Domenica e festivi: viene garantita SOLO questa linea domenicale.'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Vespri / Via Sibilla',ll:[37.8000,12.4380],m:3},
+  {n:'V.le Isonzo / C.so Gramsci',ll:[37.8090,12.4510],m:8},
+  {n:'V.ggio Sappusi',ll:[37.8160,12.4600],m:12},
+  {n:'Via Trapani / Via D. Alighieri',ll:[37.8060,12.4620],m:17},
+  {n:'Via Colaianni / Via Vita',ll:[37.7980,12.4750],m:22},
+  {n:'C/da Amabilina',ll:[37.7960,12.4820],m:26},
+  {n:'Ospedale',ll:[37.7961,12.4985],m:30}
+]}
+]};
+
+var LINES_ESTIVO={
+feriale:[
+{id:'L1',num:'LINEA 1',color:'#1A6FA8',name:'Marsala — Torreggiano — Petrosino',
+ andata:['6:25','8:00','10:40','13:00','14:30','17:00'],af:['*','','**','*','','**'],
+ ritorno:['7:10','8:45','11:10','13:45','15:15','17:30'],rf:['*','','**','*','','**'],
+ notes:['6:25* e 13:00* percorso via Lungomare Medit. – Rotonda Signorino','10:40** e 17:00** Bivio Triglia SS.115'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mazzini / Via Crispi',ll:[37.7992,12.4358],m:2},
+  {n:'Lungomare Mediterraneo',ll:[37.7840,12.4342],m:8},
+  {n:'Rotonda Signorino',ll:[37.7748,12.4438],m:13},
+  {n:'Parcheggio Signorino',ll:[37.7700,12.4380],m:16},
+  {n:'Lidi Sibiliana',ll:[37.7640,12.4430],m:20},
+  {n:'C/da Fossarunza',ll:[37.7682,12.4390],m:23},
+  {n:'C/da Torreggiano',ll:[37.7592,12.4530],m:27},
+  {n:'Via U. La Malfa',ll:[37.7528,12.458],m:31},
+  {n:'V. Triglia Scaletta',ll:[37.7448,12.4638],m:35},
+  {n:'C/da S. Giuseppe',ll:[37.7378,12.4698],m:39},
+  {n:'C/da Biscione',ll:[37.7308,12.4758],m:43}
+]},
+{id:'L2',num:'LINEA 2/5',color:'#D45C2E',name:'Marsala — Ciancio — Ciavolo',
+ andata:['6:35','8:00','10:15','13:00','14:30','16:30'],af:['','','*','','','*'],
+ ritorno:['7:10','8:45','11:05','13:45','15:15','17:20'],rf:['','','*','','','*'],
+ notes:['10:15* e 16:30* percorso ad anello Ciancio – Ciavolo – S. Padre. Capolinea Scuola S. Padre'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'P.zza Caprera',ll:[37.7985,12.4345],m:3},
+  {n:'Via N. Bixio',ll:[37.7982,12.4415],m:6},
+  {n:'Via Salemi',ll:[37.7960,12.4490],m:9},
+  {n:'Via Favara',ll:[37.7930,12.4560],m:12},
+  {n:'C/da Ciancio',ll:[37.7800,12.4800],m:17},
+  {n:'C/da Digerbato',ll:[37.7720,12.4950],m:21},
+  {n:'C/da Ciavolotto',ll:[37.7660,12.5200],m:26},
+  {n:'C/da Ciavolo',ll:[37.7618,12.5648],m:32}
+]},
+{id:'L3',num:'LINEA 3',color:'#2E8B57',name:'Marsala — Baglio Catalano',
+ andata:['6:25','13:15'],af:['',''],
+ ritorno:['7:10','13:55'],rf:['',''],
+ notes:[],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla',ll:[37.8000,12.4380],m:3},
+  {n:'V.le Isonzo',ll:[37.8030,12.4420],m:6},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:10},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:13},
+  {n:'C/da S. Venera',ll:[37.8220,12.4650],m:18},
+  {n:'C/da Fontanelle',ll:[37.8290,12.4750],m:22},
+  {n:'C/da Rakalia',ll:[37.8360,12.4880],m:27},
+  {n:'SS. Filippo e Giacomo',ll:[37.8390,12.5050],m:31},
+  {n:'Chiesa Purgatorio',ll:[37.8410,12.5180],m:34},
+  {n:'C/da Baronazzo Amafi',ll:[37.8430,12.5310],m:37},
+  {n:'Baglio Catalano',ll:[37.8443,12.5437],m:40}
+]},
+{id:'L4',num:'LINEA 4',color:'#8B4513',name:'Marsala — Sappusi — Mothia — Birgi — S. Teodoro',
+ andata:['6:30','8:00','10:30','12:30','14:30','16:00','17:30','19:00','21:00','22:30','0:30'],af:['','','','','','','','','','',''],
+ ritorno:['7:10','8:40','11:10','13:10','15:10','16:40','18:10','19:40','21:40','23:10','1:10'],rf:['','','','','','','','','','',''],
+ notes:['Estate: percorso esteso a Mothia e S. Teodoro. Corse notturne fino alle 00:30/01:10'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci / Via M. D\'Azeglio',ll:[37.8090,12.4510],m:9},
+  {n:'V.ggio Sappusi',ll:[37.8160,12.4600],m:13},
+  {n:'C/da Giunchi',ll:[37.8300,12.4650],m:18},
+  {n:'Lungomare Spagnola',ll:[37.8500,12.4560],m:23},
+  {n:'Mothia / Casello Bonetto',ll:[37.8620,12.4480],m:28},
+  {n:'SP. 21',ll:[37.8500,12.4700],m:33},
+  {n:'C/da S. Leonardo',ll:[37.8800,12.4760],m:37},
+  {n:'C/da Birgi',ll:[37.8980,12.4830],m:41},
+  {n:'Imbarc. S. Maria',ll:[37.9060,12.4870],m:44},
+  {n:'Birgi Chiesa',ll:[37.9138,12.4911],m:47},
+  {n:'S. Teodoro (Parcheggio)',ll:[37.9200,12.4950],m:52}
+]},
+{id:'L6',num:'LINEA 6',color:'#9B59B6',name:'Marsala — S. Padre',
+ andata:['6:35','8:00','10:15','13:00','14:30','16:30'],af:['','','*','','','*'],
+ ritorno:['7:10','8:40','11:05','13:40','15:10','17:20'],rf:['','','*','','','*'],
+ notes:['10:15* e 16:30* percorso ad anello Ciancio – Ciavolo – S. Padre. Capolinea Scuola S. Padre'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mazzini',ll:[37.7992,12.4365],m:2},
+  {n:'P.zza F. Pizzo',ll:[37.8014,12.4362],m:5},
+  {n:'Via Fazio / C.so Calatafimi',ll:[37.8072,12.4368],m:9},
+  {n:'C/da Ponte / Via Bue Morto',ll:[37.8152,12.4380],m:14},
+  {n:'Stadio Bambina',ll:[37.8382,12.4410],m:20},
+  {n:'C/da Ventrischi',ll:[37.8480,12.4430],m:24},
+  {n:'C/da S. Anna',ll:[37.8600,12.4480],m:28},
+  {n:'C/da Samperi / Scuola S. Padre',ll:[37.8742,12.4620],m:35}
+]},
+{id:'L10',num:'LINEA 7/10',color:'#E67E22',name:'Marsala — Granatello — Cutusio',
+ andata:['6:35','8:00','10:30','13:00','14:30','17:00'],af:['','','','','',''],
+ ritorno:['7:10','8:45','11:10','13:45','15:10','17:40'],rf:['','','','','',''],
+ notes:[],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mario Nuccio / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:12},
+  {n:'C/da S. Venera',ll:[37.8220,12.4650],m:17},
+  {n:'C/da Addolorata',ll:[37.8360,12.4820],m:22},
+  {n:'C/da Bosco',ll:[37.8500,12.4950],m:27},
+  {n:'Granatello',ll:[37.8660,12.5100],m:32},
+  {n:'Bivio Ragattisi',ll:[37.8730,12.5200],m:35},
+  {n:'Capolinea Cutusio',ll:[37.8758,12.5283],m:38}
+]},
+{id:'L13',num:'LINEA 13',color:'#C0392B',name:'Marsala — Amabilina — Ospedale — Matarocco',
+ andata:['6:35','8:00','10:15','13:00','14:30','17:00'],af:['','','*','','',''],
+ ritorno:['7:10','8:40','10:45','13:45','15:10','17:40'],rf:['','','*','','',''],
+ notes:['10:15* arriva all\'Ospedale (capolinea)'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mario Nuccio / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'Via Trapani',ll:[37.8140,12.4550],m:12},
+  {n:'Via D. Alighieri',ll:[37.8060,12.4620],m:16},
+  {n:'Via Colaianni / Via Vita',ll:[37.7980,12.4750],m:20},
+  {n:'C/da Amabilina',ll:[37.7960,12.4820],m:23},
+  {n:'Via Salemi / Ospedale',ll:[37.7961,12.4985],m:27},
+  {n:'C/da Cardilla',ll:[37.7980,12.5090],m:30},
+  {n:'C/da Misilla',ll:[37.8010,12.5160],m:33},
+  {n:'C/da Torrelunga Puleo',ll:[37.8050,12.5220],m:36},
+  {n:'Incrocio Paolini / Matarocco',ll:[37.8098,12.5300],m:39}
+]},
+{id:'L15',num:'LINEA 15',color:'#0099CC',name:'Marsala — Lidi Sud — Sibiliana ☀️',
+ andata:['8:00','9:15','10:30','12:00','15:15','16:30','18:00'],af:['','','','','','',''],
+ ritorno:['8:35','9:50','11:05','12:35','15:50','17:05','18:35'],rf:['','','','','','',''],
+ notes:['☀️ Linea stagionale estiva — Lidi e spiagge sud di Marsala'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mazzini / Via Crispi',ll:[37.7992,12.4352],m:3},
+  {n:'Porticciolo Turistico',ll:[37.8010,12.4310],m:7},
+  {n:'Lungomare',ll:[37.7900,12.4330],m:11},
+  {n:'Lido Pakeka',ll:[37.7820,12.4260],m:15},
+  {n:'Lido Delfino',ll:[37.7750,12.4255],m:18},
+  {n:'Lido Signorino / Parcheggio',ll:[37.7690,12.4260],m:22}
+]}
+],
+domenicale:[
+{id:'LD4',num:'LINEA 4',color:'#8B4513',name:'Marsala — Sappusi — Mothia — Birgi — S. Teodoro',
+ andata:['6:30','8:00','10:30','12:30','14:30','16:00','17:30','19:00'],af:['','','','','','','',''],
+ ritorno:['7:10','8:40','11:10','13:10','15:10','16:40','18:10','19:40'],rf:['','','','','','','',''],
+ notes:['Domenica estiva: linea 4 con percorso Birgi – S. Teodoro'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Sibilla / V.le Isonzo',ll:[37.8030,12.4420],m:5},
+  {n:'C.so Gramsci',ll:[37.8090,12.4510],m:9},
+  {n:'V.ggio Sappusi',ll:[37.8160,12.4600],m:13},
+  {n:'C/da Giunchi',ll:[37.8300,12.4650],m:18},
+  {n:'Lungomare Spagnola',ll:[37.8500,12.4560],m:23},
+  {n:'Mothia / Casello Bonetto',ll:[37.8620,12.4480],m:28},
+  {n:'C/da Birgi',ll:[37.8980,12.4830],m:36},
+  {n:'Imbarc. S. Maria',ll:[37.9060,12.4870],m:39},
+  {n:'Birgi Chiesa',ll:[37.9138,12.4911],m:42},
+  {n:'S. Teodoro (Parcheggio)',ll:[37.9200,12.4950],m:47}
+]},
+{id:'LD15',num:'LINEA 15',color:'#0099CC',name:'Marsala — Lidi Sud — Sibiliana ☀️',
+ andata:['9:00','10:15','11:30','13:00','15:30','16:45','18:15'],af:['','','','','','',''],
+ ritorno:['9:35','10:50','12:05','13:35','16:05','17:20','18:50'],rf:['','','','','','',''],
+ notes:['☀️ Linea stagionale estiva domenicale — Lidi e spiagge'],
+ stops:[
+  {n:'Autostazione / P.zza del Popolo',ll:[37.7966,12.4352],m:0},
+  {n:'Via Mazzini / Via Crispi',ll:[37.7992,12.4352],m:3},
+  {n:'Porticciolo Turistico',ll:[37.8010,12.4310],m:7},
+  {n:'Lungomare',ll:[37.7900,12.4330],m:11},
+  {n:'Lido Pakeka',ll:[37.7820,12.4260],m:15},
+  {n:'Lido Delfino',ll:[37.7750,12.4255],m:18},
+  {n:'Lido Signorino / Parcheggio',ll:[37.7690,12.4260],m:22}
+]}
+]};
+
+// Set active schedule based on season
+var LINES = isSummer() ? LINES_ESTIVO : LINES_INVERNALE;
+
+var currentDay='feriale';
+var selected={};  // { lineId: {time, dir} }
+var myStop=null;  // { lineId, stopIdx, stopName }
+var blurTimeout=null;
+
+/* ── UTILS ── */
+function toMins(t){var p=t.split(':');return parseInt(p[0])*60+(parseInt(p[1])||0);}
+function addMins(base,delta){var tot=toMins(base)+delta;return ('0'+Math.floor(tot/60)).slice(-2)+':'+('0'+(tot%60)).slice(-2);}
+function nowMins(){var n=new Date();return n.getHours()*60+n.getMinutes();}
+
+/* ── CLOCK ── */
+function updateClock(){
+  var n=new Date();
+  document.getElementById('clock').textContent=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);
+  var days=['Domenica','Luned\u00ec','Marted\u00ec','Mercoled\u00ec','Gioved\u00ec','Venerd\u00ec','Sabato'];
+  var months=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  document.getElementById('dateStr').textContent=days[n.getDay()]+' '+n.getDate()+' '+months[n.getMonth()]+' '+n.getFullYear();
+}
+
+/* ── TICKER ── */
+function updateTicker(){
+  var lines=LINES[currentDay];var now=nowMins();
+  var best=null,bestLine=null,bestStop=null;
+  var live=[];
+
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    var totalDuration=l.stops[l.stops.length-1].m;
+
+    // Check ANDATA runs — running now OR departing within 60 min
+    for(var j=0;j<l.andata.length;j++){
+      var depM=toMins(l.andata[j]);
+      var arrM=depM+totalDuration;
+      if(now<arrM && depM-now<=60){
+        var running=depM<=now;
+        var elapsed=running?now-depM:0;
+        var curStop=l.stops[0];
+        if(running){
+          for(var k=0;k<l.stops.length-1;k++){
+            if(elapsed>=l.stops[k].m&&elapsed<l.stops[k+1].m){curStop=l.stops[k];break;}
+            if(k===l.stops.length-2&&elapsed>=l.stops[k+1].m){curStop=l.stops[k+1];}
+          }
+        }
+        live.push({line:l,dep:l.andata[j],dir:'andata',curStop:curStop,minsLeft:arrM-now,running:running,minsToGo:running?0:depM-now});
+      }
+    }
+
+    // Check RITORNO runs — running now OR departing within 60 min
+    if(l.ritorno&&l.ritorno.length){
+      for(var j=0;j<l.ritorno.length;j++){
+        var depM=toMins(l.ritorno[j]);
+        var arrM=depM+totalDuration;
+        if(now<arrM && depM-now<=60){
+          var running=depM<=now;
+          var elapsed=running?now-depM:0;
+          var rStops=l.stops.slice().reverse();
+          var curStop=rStops[0];
+          if(running){
+            for(var k=0;k<rStops.length-1;k++){
+              if(elapsed>=rStops[k].m&&elapsed<rStops[k+1].m){curStop=rStops[k];break;}
+              if(k===rStops.length-2&&elapsed>=rStops[k+1].m){curStop=rStops[k+1];}
+            }
+          }
+          live.push({line:l,dep:l.ritorno[j],dir:'ritorno',curStop:curStop,minsLeft:arrM-now,running:running,minsToGo:running?0:depM-now});
+        }
+      }
+    }
+
+    // Next best departure (andata only, from user's stop if set)
+    var offset=0;
+    if(myStop&&myStop.lineId===l.id)offset=l.stops[myStop.stopIdx].m;
+    for(var j=0;j<l.andata.length;j++){
+      var m=toMins(l.andata[j])+offset;
+      if(m>now&&(best===null||m<best)){best=m;bestLine=l;bestStop=myStop&&myStop.lineId===l.id?myStop.stopName:null;}
+    }
+  }
+
+  var liveEl=document.getElementById('liveBuses');
+  // Check if service has ended for the day (last possible arr time has passed)
+  var lastArr=0;
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    var tot=l.stops[l.stops.length-1].m;
+    for(var j=0;j<l.andata.length;j++){
+      var end=toMins(l.andata[j])+tot;
+      if(end>lastArr)lastArr=end;
+    }
+    if(l.ritorno){for(var j=0;j<l.ritorno.length;j++){
+      var end=toMins(l.ritorno[j])+tot;
+      if(end>lastArr)lastArr=end;
+    }}
+  }
+  if(live.length===0){
+    var msg=now>lastArr?'Servizio terminato per oggi':'Nessun bus in circolazione adesso';
+    liveEl.innerHTML='<span class="live-none">'+msg+'</span>';
+  } else {
+    // Separate running from upcoming for header label
+    var anyRunning=live.some(function(lv){return lv.running;});
+    var headerEl=document.querySelector('.ticker-incorsa-header .ticker-label');
+    if(headerEl) headerEl.textContent=anyRunning?'In corsa':'Prossime partenze';
+    var h2='';
+    for(var i=0;i<live.length;i++){
+      var lv=live[i];
+      var l=lv.line;
+      var depM=toMins(lv.dep);
+      var isRitorno=lv.dir==='ritorno';
+      var isRunning=lv.running;
+      var minsToGo=lv.minsToGo;
+      var chipStops=isRitorno?l.stops.slice().reverse():l.stops.slice();
+      var dirLabel=isRitorno?'↙ Ritorno':'↗ Andata';
+
+      // Find next stop index in chipStops (only relevant when running)
+      var nextIdx=-1;
+      if(isRunning){
+        for(var k=0;k<chipStops.length;k++){
+          if(depM+chipStops[k].m>now){nextIdx=k;break;}
+        }
+      }
+
+      // Countdown badge + next stop label
+      var countdownHtml='';
+      var nextStopName=_fixStopName(chipStops[chipStops.length-1].n);
+      if(!isRunning){
+        // Upcoming
+        var upColor=minsToGo<=10?'#e67e22':'#888';
+        var upBg=minsToGo<=10?'rgba(230,126,34,0.12)':'rgba(0,0,0,0.06)';
+        var upText=minsToGo<=0?'Ora':minsToGo===1?'1 min':'tra '+minsToGo+' min';
+        countdownHtml='<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:'+upColor+';background:'+upBg+';border-radius:5px;padding:1px 7px;white-space:nowrap;flex-shrink:0">'+upText+'</span>';
+        nextStopName=_fixStopName(chipStops[0].n); // show origin when not yet running
+      } else if(nextIdx>=0){
+        var ns=chipStops[nextIdx];
+        var minsToNext=depM+ns.m-now;
+        var cdClass=minsToNext<=2?'live-chip-countdown arriving':'live-chip-countdown';
+        countdownHtml='<span class="'+cdClass+'">'+(minsToNext<=1?'Ora!':minsToNext+' min')+'</span>';
+        nextStopName=_fixStopName(ns.n);
+      } else {
+        countdownHtml='<span class="live-chip-countdown arriving">Arrivo</span>';
+      }
+      // Stop list — only show when actually running
+      var stopsHtml='';
+      if(isRunning){
+        stopsHtml='<div class="live-chip-stops">';
+        var startK=Math.max(0,nextIdx>=0?nextIdx:chipStops.length-1);
+        var shown=0;
+        for(var k=startK;k<chipStops.length&&shown<5;k++){
+          var s=chipStops[k];
+          var arrM2=depM+s.m;
+          var minsAway=arrM2-now;
+          var arrTime=('0'+Math.floor(arrM2/60)).slice(-2)+':'+('0'+(arrM2%60)).slice(-2);
+          var sName=_fixStopName(s.n);
+          if(sName.length>22)sName=sName.slice(0,20)+'…';
+          var isNext=k===nextIdx;
+          stopsHtml+='<div class="'+(isNext?'live-stop-row next-stop':'live-stop-row')+'">'+
+            '<div class="'+(isNext?'live-stop-dot cur':'live-stop-dot')+'"></div>'+
+            '<span class="live-stop-name">'+sName+'</span>'+
+            '<span class="live-stop-time">'+(minsAway<=0?'Ora!':arrTime+' ('+minsAway+'m)')+'</span>'+
+          '</div>';
+          shown++;
+        }
+        if(chipStops.length-startK>5){
+          stopsHtml+='<div class="live-stop-row" style="opacity:.4;font-style:italic;font-size:10px">+ '+(chipStops.length-startK-5)+' fermate…</div>';
+        }
+        stopsHtml+='</div>';
+      }
+
+      // Chip border/bg colour by state
+      var chipClass='live-chip'+(isRunning?'':' upcoming');
+      var dotColor=isRunning?l.color:(minsToGo<=10?'#e67e22':'#bbb');
+      var arrowOrIcon=isRunning?'▶':'🕐';
+      var nextLabelColor=isRunning?'var(--sea)':'#888';
+
+      h2+='<div class="'+chipClass+'" onclick="openCardWithTime(this)" data-lid="'+l.id+'" data-dep="'+lv.dep+'" data-dir="'+lv.dir+'">'+
+        '<div class="live-chip-top">'+
+          '<div class="live-chip-dot" style="background:'+dotColor+'"></div>'+
+          '<span class="live-chip-num" style="color:'+l.color+'">'+l.num.replace('LINEA ','')+' </span>'+
+          '<span style="font-size:10px;font-weight:700;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.08em;padding:1px 5px;border-radius:3px;background:'+(isRitorno?'rgba(212,92,46,0.12)':'rgba(13,79,122,0.10)')+';color:'+(isRitorno?'var(--terra)':'var(--sea)')+'">'+dirLabel+'</span>'+
+          '<span style="flex:1"></span>'+
+          countdownHtml+
+        '</div>'+
+        '<div style="font-size:12px;font-weight:600;color:'+nextLabelColor+';margin:3px 0 0 16px">'+arrowOrIcon+' '+nextStopName+'</div>'+
+        stopsHtml+
+      '</div>';
+    }
+    liveEl.innerHTML=h2;
+  }
+
+  var el=document.getElementById('tickerText');
+  if(!bestLine){el.textContent='Nessuna corsa disponibile nelle prossime ore.';return;}
+  var h=('0'+Math.floor(best/60)).slice(-2),mi=('0'+(best%60)).slice(-2);
+  var loc=bestStop?' a '+bestStop:'';
+  el.textContent=bestLine.name+' · ore '+h+':'+mi+loc+' · tra '+(best-nowMins())+' min';
+}
+/* ── DAY SWITCH ── */
+function switchDay(d,btn){
+  currentDay=d;myStop=null;selected={};
+  document.querySelectorAll('.day-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var lbl=d==='feriale'?(isSummer()?'\u2014 Linee feriali estive (Lun\u2013Sab) \u2014':'\u2014 Linee feriali (Lun\u2013Sab) \u2014'):(isSummer()?'\u2014 Servizio domenicale estivo \u2014':'\u2014 Servizio domenicale / festivo \u2014');
+  document.getElementById('sectionLabel').textContent=lbl;
+  document.getElementById('stopBanner').style.display='none';
+  render();updateTicker();
+}
+
+/* ── MY STOP ── */
+function setMyStop(lineId,stopIdx,stopName){
+  myStop={lineId:lineId,stopIdx:stopIdx,stopName:stopName};
+  document.getElementById('stopBannerName').textContent=stopName;
+  document.getElementById('stopBanner').style.display='flex';
+  document.body.classList.add('has-stop-banner');
+  document.getElementById('searchInput').value='';
+  hideSuggestions();
+  selected={};
+  render();updateTicker();
+}
+
+function clearMyStop(){
+  myStop=null;
+  document.getElementById('stopBanner').style.display='none';
+  document.body.classList.remove('has-stop-banner');
+  render();updateTicker();
+}
+
+/* ── SEARCH / SUGGESTIONS ── */
+function normalize(s){return s.toLowerCase().replace(/[\/\-\.]/g,' ');}
+
+function buildSuggestions(q){
+  if(!q||q.length<2)return[];
+  var nq=normalize(q);
+  var results=[];
+  // Lines
+  var lines=LINES[currentDay];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(normalize(l.name).indexOf(nq)>-1||l.num.toLowerCase().indexOf(nq)>-1){
+      results.push({type:'line',label:l.name,sub:l.num,lineId:l.id});
+    }
+  }
+  // Stops — deduplicate by stop name
+  var seenStops={};
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    for(var j=0;j<l.stops.length;j++){
+      var s=l.stops[j];
+      if(normalize(s.n).indexOf(nq)>-1){
+        var key=s.n+'|'+l.id;
+        if(!seenStops[key]){
+          seenStops[key]=true;
+          results.push({type:'stop',label:s.n,sub:l.num+' \u2014 '+l.name,lineId:l.id,stopIdx:j,stopName:s.n});
+        }
+      }
+    }
+  }
+  return results;
+}
+
+function onSearchInput(){
+  var q=document.getElementById('searchInput').value.trim();
+  var sug=buildSuggestions(q);
+  if(sug.length>0){
+    renderSuggestions(sug);
+    showSuggestions();
+  } else {
+    hideSuggestions();
+  }
+  render();
+}
+
+function onSearchFocus(){
+  var q=document.getElementById('searchInput').value.trim();
+  if(q.length>=2){
+    var sug=buildSuggestions(q);
+    if(sug.length>0){renderSuggestions(sug);showSuggestions();}
+  }
+}
+
+function onSearchBlur(){
+  blurTimeout=setTimeout(hideSuggestions,180);
+}
+
+function showSuggestions(){document.getElementById('suggestions').classList.add('show');}
+function hideSuggestions(){document.getElementById('suggestions').classList.remove('show');}
+
+function renderSuggestions(sug){
+  var hasLine=sug.some(function(s){return s.type==='line';});
+  var hasStop=sug.some(function(s){return s.type==='stop';});
+  var html='';
+  if(hasLine){html+='<div class="sug-section">Linee</div>';}
+  for(var i=0;i<sug.length;i++){
+    var s=sug[i];
+    if(s.type==='line'){
+      if(hasStop&&i>0&&sug[i-1].type==='line'&&i===sug.filter(function(x){return x.type==='line';}).length)html+='';
+      html+='<div class="sug-item" onclick="pickLineSuggestion(\''+s.lineId+'\')">'+
+        '<span class="sug-item-icon">🚌</span>'+
+        '<div><div class="sug-item-main">'+s.label+'</div><div class="sug-item-sub">'+s.sub+'</div></div>'+
+      '</div>';
+    }
+  }
+  if(hasStop){html+='<div class="sug-section">Fermate</div>';}
+  for(var i=0;i<sug.length;i++){
+    var s=sug[i];
+    if(s.type==='stop'){
+      html+='<div class="sug-item" onclick="pickStopSuggestion(\''+s.lineId+'\','+s.stopIdx+',\''+escQ(s.stopName)+'\')">'+
+        '<span class="sug-item-icon">📍</span>'+
+        '<div><div class="sug-item-main">'+s.label+'</div><div class="sug-item-sub">'+s.sub+'</div></div>'+
+      '</div>';
+    }
+  }
+  document.getElementById('suggestions').innerHTML=html;
+}
+
+function escQ(s){return s.replace(/'/g,"\\'");}
+
+function pickLineSuggestion(lineId){
+  clearTimeout(blurTimeout);
+  hideSuggestions();
+  document.getElementById('searchInput').value='';
+  var card=document.getElementById('card-'+lineId);
+  if(card){card.classList.add('open');card.scrollIntoView({behavior:'smooth',block:'start'});}
+  render();
+}
+
+function _fixStopName(n){
+  // Shorten C/da → C.da so it doesn't get truncated to just "C"
+  return n.replace(/^C\/da\s*/i,'C.da ').replace(/^C\/so\s*/i,'C.so ');
+}
+
+function openCardWithTime(el){
+  var lineId=el.dataset.lid, time=el.dataset.dep, dir=el.dataset.dir||'andata';
+  selected[lineId]={time:time,dir:dir};
+  myStop=null;
+  document.getElementById('stopBanner').style.display='none';
+  document.body.classList.remove('has-stop-banner');
+  render(false);
+  setTimeout(function(){
+    var card=document.getElementById('card-'+lineId);
+    if(card){
+      card.classList.add('open');
+      render(true);
+      setTimeout(function(){
+        var stickyH=(document.querySelector('.controls')||{offsetHeight:60}).offsetHeight||60;
+        var top=card.getBoundingClientRect().top+window.scrollY-stickyH-12;
+        window.scrollTo({top:top,behavior:'smooth'});
+      },80);
+    }
+  },60);
+}
+
+function pickStopSuggestion(lineId,stopIdx,stopName){
+  clearTimeout(blurTimeout);
+  setMyStop(lineId,stopIdx,stopName);
+}
+
+/* ── CARD TOGGLE ── */
+function toggleCard(id){
+  var card=document.getElementById('card-'+id);
+  card.classList.toggle('open');
+}
+
+function selectTime(lineId,time,dir){
+  if(selected[lineId]&&selected[lineId].time===time&&selected[lineId].dir===dir){delete selected[lineId];}
+  else{selected[lineId]={time:time,dir:dir};}
+  render(true);
+  // If this line's map is open, redraw to show arrival times on markers
+  setTimeout(function(){
+    var btn=document.querySelector('.map-toggle-btn[data-lid="'+lineId+'"]');
+    if(btn&&btn.classList.contains('open')){
+      var activeTab=btn.parentElement.querySelector('.map-dir-tab.active');
+      var activeDir=activeTab&&activeTab.textContent.indexOf('Ritorno')>-1?'ritorno':'andata';
+      drawMap(lineId,activeDir);
+    }
+  },60);
+}
+
+/* ── MAP (Leaflet) ── */
+var leafletMaps = {}; // { lineId: { map, layers } }
+
+function toggleMap(btn,lineId){
+  btn.classList.toggle('open');
+  if(btn.classList.contains('open')){
+    setTimeout(function(){drawMap(lineId,'andata');},80);
+  } else {
+    // destroy map to free memory
+    if(leafletMaps[lineId]){
+      leafletMaps[lineId].map.remove();
+      delete leafletMaps[lineId];
+    }
+  }
+}
+
+function switchMapDir(lineId,dir,tabEl){
+  tabEl.closest('.map-section').querySelectorAll('.map-dir-tab').forEach(function(t){t.classList.remove('active');});
+  tabEl.classList.add('active');
+  drawMap(lineId,dir);
+}
+
+function lerpColor(c1,c2,t){
+  // c1, c2 as '#rrggbb'
+  function h(c){return[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];}
+  var a=h(c1),b=h(c2);
+  var r=Math.round(a[0]+(b[0]-a[0])*t);
+  var g=Math.round(a[1]+(b[1]-a[1])*t);
+  var bl=Math.round(a[2]+(b[2]-a[2])*t);
+  return 'rgb('+r+','+g+','+bl+')';
+}
+
+function ensureLeafletReady(cb){
+  if(window.L){cb();return;}
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+  s.onload=cb;
+  document.head.appendChild(s);
+}
+
+function drawMap(lineId,dir){
+  ensureLeafletReady(function(){_drawMap(lineId,dir||'andata');});
+}
+
+function _drawMap(lineId,dir){
+  var mapEl=document.getElementById('map-'+lineId);
+  if(!mapEl)return;
+  var lines=LINES[currentDay];
+  var line=null;
+  for(var i=0;i<lines.length;i++){if(lines[i].id===lineId){line=lines[i];break;}}
+  if(!line)return;
+
+  var stops=line.stops.slice();
+  if(dir==='ritorno')stops=stops.slice().reverse();
+
+  if(leafletMaps[lineId]){
+    leafletMaps[lineId].map.remove();
+    delete leafletMaps[lineId];
+  }
+
+  var map=L.map(mapEl,{zoomControl:true,scrollWheelZoom:false,tap:true,attributionControl:true});
+  map.once('click',function(){map.scrollWheelZoom.enable();});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom:19
+  }).addTo(map);
+
+  var startColor=line.color;
+  var endColor='#F5C842';
+  var myStopIdx=(myStop&&myStop.lineId===lineId)?myStop.stopIdx:-1;
+
+  // Fit bounds immediately
+  var bounds=L.latLngBounds(stops.map(function(s){return[s.ll[0],s.ll[1]];}));
+  map.fitBounds(bounds,{padding:[40,40]});
+
+  // Loading pill
+  var loadingDiv=document.createElement('div');
+  loadingDiv.id='map-loading-'+lineId;
+  loadingDiv.style.cssText='position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(13,79,122,0.88);color:#fff;font-family:Barlow,sans-serif;font-size:12px;padding:6px 16px;border-radius:20px;pointer-events:none';
+  loadingDiv.textContent='Caricamento percorso…';
+  mapEl.style.position='relative';
+  mapEl.appendChild(loadingDiv);
+  function removeLoading(){var el=document.getElementById('map-loading-'+lineId);if(el)el.remove();}
+
+  // Add a marker at a given latlng for stop index i
+  function addStopMarker(latlng, s, i, origIdx){
+    var isFirst=i===0, isLast=i===stops.length-1;
+    var isMy=origIdx===myStopIdx;
+    var t=i/(stops.length-1||1);
+    var markerColor=isMy?'#F5C842':lerpColor(startColor,endColor,t);
+    var borderColor=isMy?'#C8952A':startColor;
+    var size=isMy?20:isFirst||isLast?16:11;
+    var icon=L.divIcon({
+      className:'',
+      html:'<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+markerColor+';border:3px solid '+borderColor+';box-shadow:0 2px 8px rgba(0,0,0,0.28)'+(isMy?',0 0 0 4px rgba(245,200,66,0.4)':'')+';"></div>',
+      iconSize:[size,size],iconAnchor:[size/2,size/2]
+    });
+    var marker=L.marker(latlng,{icon:icon,zIndexOffset:100});
+    var tag=isMy?'<br><b style="color:#C8952A">\uD83D\uDCCD TUA FERMATA</b>':
+             isFirst?'<br><span style="color:'+line.color+'">\u25b6 PARTENZA</span>':
+             isLast?'<br><span style="color:#555">\u23f9 CAPOLINEA</span>':'';
+    var selTime=selected[lineId]?selected[lineId].time:null;
+    var timeStr='';
+    if(selTime){timeStr='<br><span style="font-family:monospace;font-weight:700">'+addMins(selTime,s.m)+'</span>';}
+    marker.bindPopup('<div style="font-family:Barlow,sans-serif;font-size:13px;min-width:140px"><b>'+s.n+'</b>'+timeStr+tag+'</div>',{maxWidth:220});
+    marker.addTo(map);
+  }
+
+  // Add a marker at a given latlng for stop index i
+  function addStopMarker(latlng, s, i, origIdx){
+    var isFirst=i===0, isLast=i===stops.length-1;
+    var isMy=origIdx===myStopIdx;
+    var t=i/(stops.length-1||1);
+    var markerColor=isMy?'#F5C842':lerpColor(startColor,endColor,t);
+    var borderColor=isMy?'#C8952A':startColor;
+    var size=isMy?20:isFirst||isLast?16:11;
+    var icon=L.divIcon({
+      className:'',
+      html:'<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+markerColor+';border:3px solid '+borderColor+';box-shadow:0 2px 8px rgba(0,0,0,0.28)'+(isMy?',0 0 0 4px rgba(245,200,66,0.4)':'')+';"></div>',
+      iconSize:[size,size],iconAnchor:[size/2,size/2]
+    });
+    var marker=L.marker(latlng,{icon:icon,zIndexOffset:100});
+    var tag=isMy?'<br><b style="color:#C8952A">\uD83D\uDCCD TUA FERMATA</b>':
+             isFirst?'<br><span style="color:'+line.color+'">\u25b6 PARTENZA</span>':
+             isLast?'<br><span style="color:#555">\u23f9 CAPOLINEA</span>':'';
+    var selTime=selected[lineId]?selected[lineId].time:null;
+    var timeStr='';
+    if(selTime){timeStr='<br><span style="font-family:monospace;font-weight:700">'+addMins(selTime,s.m)+'</span>';}
+    marker.bindPopup('<div style="font-family:Barlow,sans-serif;font-size:13px;min-width:140px"><b>'+s.n+'</b>'+timeStr+tag+'</div>',{maxWidth:220});
+    marker.addTo(map);
+  }
+
+  // Draw gradient polyline from array of [lat,lng] points
+  function drawGradientLine(pts){
+    var total=pts.length;
+    for(var i=0;i<total-1;i++){
+      var t=(i/(total-1));
+      var segColor=lerpColor(startColor,endColor,t);
+      var seg=[pts[i],pts[i+1]];
+      L.polyline(seg,{color:'rgba(0,0,0,0.13)',weight:9,lineCap:'round',lineJoin:'round',interactive:false}).addTo(map);
+      L.polyline(seg,{color:segColor,weight:6,lineCap:'round',lineJoin:'round'}).addTo(map);
+    }
+    if(total>1){
+      var mid=Math.floor(total/2);
+      var p1=pts[mid-1], p2=pts[mid];
+      var ang=Math.atan2(p2[0]-p1[0],p2[1]-p1[1])*(180/Math.PI);
+      var arrowIcon=L.divIcon({
+        className:'',
+        html:'<div style="transform:rotate('+(90-ang)+'deg);color:'+line.color+';font-size:20px;text-shadow:0 1px 4px rgba(0,0,0,0.3);line-height:1">\u25b2</div>',
+        iconSize:[20,20],iconAnchor:[10,10]
+      });
+      L.marker([(p1[0]+p2[0])/2,(p1[1]+p2[1])/2],{icon:arrowIcon,interactive:false}).addTo(map);
+    }
+  }
+
+  // Find the point on a polyline closest to a given latlng
+  function closestPointOnRoute(routePts, targetLat, targetLng){
+    var bestDist=Infinity, bestPt=[targetLat,targetLng];
+    for(var i=0;i<routePts.length-1;i++){
+      var a=routePts[i], b=routePts[i+1];
+      var dx=b[0]-a[0], dy=b[1]-a[1];
+      var len2=dx*dx+dy*dy;
+      if(len2===0){var d=dist2(targetLat,targetLng,a[0],a[1]);if(d<bestDist){bestDist=d;bestPt=a;}continue;}
+      var t=((targetLat-a[0])*dx+(targetLng-a[1])*dy)/len2;
+      t=Math.max(0,Math.min(1,t));
+      var px=a[0]+t*dx, py=a[1]+t*dy;
+      var d=dist2(targetLat,targetLng,px,py);
+      if(d<bestDist){bestDist=d;bestPt=[px,py];}
+    }
+    return bestPt;
+  }
+  function dist2(a,b,c,d){var dx=a-c,dy=b-d;return dx*dx+dy*dy;}
+
+  // OSRM fetch — use road route if available, fallback to straight lines
+  var stopsLen=line.stops.length;
+
+  function drawRoute(pts){
+    drawGradientLine(pts);
+    stops.forEach(function(s,i){
+      var origIdx=dir==='ritorno'?(stopsLen-1-i):i;
+      addStopMarker([s.ll[0],s.ll[1]], s, i, origIdx);
+    });
+  }
+
+  var coords=stops.map(function(s){return s.ll[1]+','+s.ll[0];}).join(';');
+  var osrmUrl='https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson&steps=false';
+
+  fetch(osrmUrl)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      removeLoading();
+      if(!data.routes||!data.routes[0]){drawRoute(stops.map(function(s){return[s.ll[0],s.ll[1]];}));return;}
+      var routeCoords=data.routes[0].geometry.coordinates.map(function(c){return[c[1],c[0]];});
+      drawGradientLine(routeCoords);
+      stops.forEach(function(s,i){
+        var origIdx=dir==='ritorno'?(stopsLen-1-i):i;
+        var snapped=closestPointOnRoute(routeCoords, s.ll[0], s.ll[1]);
+        addStopMarker(snapped, s, i, origIdx);
+      });
+    })
+    .catch(function(){
+      removeLoading();
+      drawRoute(stops.map(function(s){return[s.ll[0],s.ll[1]];}));
+    });
+
+  leafletMaps[lineId]={map:map};
+}
+
+
+/* ── STOP LIST ── */
+function buildStopList(line,selTime,selDir,myStopIdx){
+  if(!selTime)return '<div class="hint">\uD83D\uDC46 Tocca un orario per vedere le fermate con gli orari</div>';
+  var now=nowMins();var depM=toMins(selTime);
+  var html='<div class="stops-header">Fermate \u00b7 Partenza '+selTime+(myStopIdx>=0?' \u00b7 La tua fermata: '+line.stops[myStopIdx].n:'')+'</div>';
+  // only show stops from myStopIdx onwards if set
+  var startIdx=myStopIdx>=0?myStopIdx:0;
+  for(var i=startIdx;i<line.stops.length;i++){
+    var s=line.stops[i];
+    var arrTime=addMins(selTime,s.m);
+    var arrM=depM+s.m;
+    var isPast=arrM<now;
+    var isFirst=i===startIdx,isLast=i===line.stops.length-1;
+    var isNext=!isPast&&(i===startIdx||(depM+line.stops[i-1].m)<now);
+    var isMy=i===myStopIdx;
+    var dotSize=isFirst||isLast||isMy?12:8;
+    var dotColor=isMy?'#F5C842':isNext?'#F5C842':(isFirst||isLast)?line.color:'#fff';
+    var dotBorder=isMy?'#C8952A':line.color;
+    html+='<div class="stop-row" style="opacity:'+(isPast?0.38:1)+'">'+
+      '<div class="stop-line-col">'+
+        '<div class="stop-dot" style="width:'+dotSize+'px;height:'+dotSize+'px;background:'+dotColor+';border-color:'+dotBorder+';'+(isNext&&!isMy?'box-shadow:0 0 0 3px '+line.color+'33;':isMy?'box-shadow:0 0 0 3px rgba(245,200,66,0.4);':'')+'"></div>'+
+        (!isLast?'<div class="stop-connector" style="background:'+line.color+'33"></div>':'')+
+      '</div>'+
+      '<div class="stop-name-cell'+(isMy?' your-stop-row':isNext?' nxt':'')+'">'+
+        s.n+
+        (isMy?'<span class="stop-tag" style="background:#C8952A">\uD83D\uDCCD TUA FERMATA</span>':'')+
+        (isFirst&&!isMy?'<span class="stop-tag" style="background:'+line.color+'">PARTENZA</span>':'')+
+        (isLast?'<span class="stop-tag" style="background:#555">CAPOLINEA</span>':'')+
+      '</div>'+
+      '<div class="stop-time-cell" style="color:'+(isMy?'#C8952A':isNext?line.color:isPast?'#bbb':'#1A1208')+'">'+arrTime+'</div>'+
+    '</div>';
+  }
+  return html;
+}
+
+/* ── RENDER ── */
+function render(keepOpen){
+  var q=document.getElementById('searchInput').value.toLowerCase().trim();
+  var now=nowMins();
+
+  // Filter: line name/num, or stop names
+  var lines=LINES[currentDay].filter(function(l){
+    if(!q)return true;
+    var nq=normalize(q);
+    if(normalize(l.name).indexOf(nq)>-1||l.num.toLowerCase().indexOf(nq)>-1)return true;
+    // check stops
+    for(var i=0;i<l.stops.length;i++){
+      if(normalize(l.stops[i].n).indexOf(nq)>-1)return true;
+    }
+    return false;
+  });
+
+  // If myStop is set, only show that line
+  if(myStop){
+    lines=LINES[currentDay].filter(function(l){return l.id===myStop.lineId;});
+  }
+
+  if(!lines.length){
+    document.getElementById('cards').innerHTML='<div style="text-align:center;padding:60px 20px;color:#bbb;font-size:16px">Nessuna linea trovata per "'+q+'".</div>';
+    return;
+  }
+
+  var openSet=new Set();
+  if(keepOpen)document.querySelectorAll('.card.open').forEach(function(c){openSet.add(c.id);});
+  var openMaps={};
+  if(keepOpen)document.querySelectorAll('.map-toggle-btn.open').forEach(function(b){openMaps[b.getAttribute('data-lid')]=true;});
+
+  var html='';
+  for(var li=0;li<lines.length;li++){
+    var l=lines[li];
+    var sel=selected[l.id];
+
+    // myStop offset for this line
+    var myStopIdx=(myStop&&myStop.lineId===l.id)?myStop.stopIdx:-1;
+    var stopOffset=myStopIdx>=0?l.stops[myStopIdx].m:0;
+
+    // next departure from user's stop
+    var nextA=null;
+    for(var i=0;i<l.andata.length;i++){
+      if(toMins(l.andata[i])+stopOffset>now){nextA=l.andata[i];break;}
+    }
+
+    // adjusted display time for chip
+    function chipTime(t){
+      return myStopIdx>=0?addMins(t,stopOffset):t;
+    }
+
+    var subLabel=myStopIdx>=0
+      ?'Da: '+myStop.stopName
+      :'Partenza \u00b7 Piazza del Popolo';
+
+    var nextBadge=nextA
+      ?'<span class="next-badge">'+chipTime(nextA)+'</span>'
+      :'<span class="next-badge gone">Fine corse</span>';
+
+    // chips — show adjusted time at user's stop
+    function makeChips(times,flags,dir){
+      var h='';
+      for(var i=0;i<times.length;i++){
+        var t=times[i];
+        var dispTime=chipTime(t);
+        var dispM=toMins(t)+stopOffset;
+        var cls='t-chip';
+        if(t===nextA&&dir==='andata')cls+=' current';
+        if(dispM<now)cls+=' past';
+        if(sel&&sel.time===t&&sel.dir===dir)cls+=' selected';
+        h+='<div class="'+cls+'" onclick="event.stopPropagation();selectTime(\''+l.id+'\',\''+t+'\',\''+dir+'\')">'+dispTime+'<sup>'+flags[i]+'</sup></div>';
+      }
+      return h;
+    }
+
+    var notesHtml='';
+    if(l.notes.length){notesHtml='<div class="notes-box">'+l.notes.map(function(n){return '<p>'+n+'</p>';}).join('')+'</div>';}
+
+    var wasOpen=keepOpen?openSet.has('card-'+l.id):myStop!=null;
+    var mapWasOpen=openMaps[l.id];
+
+    html+='<div class="card'+(wasOpen?' open':'')+'" id="card-'+l.id+'">'+
+      '<div class="card-head" onclick="toggleCard(\''+l.id+'\')">'+
+        '<div class="card-num" style="background:'+l.color+'">'+l.num+'</div>'+
+        '<div class="card-info">'+
+          '<div class="card-title">'+l.name+'</div>'+
+          '<div class="card-sub'+(myStopIdx>=0?' your-stop':'')+'">'+subLabel+'</div>'+
+        '</div>'+
+        '<div class="card-next-wrap">'+nextBadge+'</div>'+
+        '<div class="card-arrow">\u203a</div>'+
+      '</div>'+
+      '<div class="card-body">'+
+        '<div class="tt-grid">'+
+          '<div><div class="tt-dir-label dir-a">\u2197 Andata</div><div class="times-row">'+makeChips(l.andata,l.af,'andata')+'</div></div>'+
+          (l.ritorno.length?'<div><div class="tt-dir-label dir-r">\u2199 Ritorno</div><div class="times-row">'+makeChips(l.ritorno,l.rf,'ritorno')+'</div></div>':'<div></div>')+
+        '</div>'+
+        '<div class="stops-section">'+buildStopList(l,sel?sel.time:null,sel?sel.dir:'andata',myStopIdx)+'</div>'+
+        notesHtml+
+        '<div class="map-section" onclick="event.stopPropagation()">'+
+          '<button class="map-toggle-btn'+(mapWasOpen?' open':'')+'" data-lid="'+l.id+'" onclick="toggleMap(this,\''+l.id+'\')">'+
+            '<span class="arr">\u203a</span> \uD83D\uDDFA Mappa percorso'+
+          '</button>'+
+          '<div class="map-dir-tabs">'+
+            '<button class="map-dir-tab active" onclick="switchMapDir(\''+l.id+'\',\'andata\',this)">\u2197 Andata</button>'+
+            (l.ritorno.length?'<button class="map-dir-tab" onclick="switchMapDir(\''+l.id+'\',\'ritorno\',this)">\u2199 Ritorno</button>':'')+
+          '</div>'+
+          '<div class="map-leaflet-wrap" data-lid="'+l.id+'">'+
+            '<div class="leaflet-map" id="map-'+l.id+'"></div>'+
+            '<div class="map-legend">'+
+              '<div class="legend-gradient" id="legend-grad-'+l.id+'" style="background:linear-gradient(to right,'+l.color+',#F5C842)"></div>'+
+              '<span class="legend-label">Inizio corsa &rarr; Fine corsa</span>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+  document.getElementById('cards').innerHTML=html;
+
+  if(keepOpen){
+    openSet.forEach(function(cardId){
+      var lineId=cardId.replace('card-','');
+      if(openMaps[lineId])setTimeout(function(){drawMap(lineId,'andata');},80);
+    });
+  }
+  // auto draw map for myStop card
+  if(myStop&&!keepOpen){
+    setTimeout(function(){
+      var btn=document.getElementById('mapbtn-'+myStop.lineId);
+    },40);
+  }
+}
+
+
+/* ── LIVE OVERVIEW MAP ── */
+var _liveMap = null;
+var _liveMapBusMarkers = {}; // lineId+dep -> marker
+var _liveMapRouteCache = {}; // lineId -> [lat,lng] route points
+var _liveMapInterval = null;
+var _liveMapOpen = false;
+
+function openLiveMap(){
+  _liveMapOpen = true;
+  document.getElementById('liveMapPanel').classList.add('visible');
+  ensureLeafletReady(function(){
+    setTimeout(_initLiveMap, 80);
+  });
+}
+
+function closeLiveMap(){
+  _liveMapOpen = false;
+  document.getElementById('liveMapPanel').classList.remove('visible');
+  if(_liveMapInterval){clearInterval(_liveMapInterval);_liveMapInterval=null;}
+  if(_busAnimFrame){cancelAnimationFrame(_busAnimFrame);_busAnimFrame=null;}
+  if(_liveMap){_liveMap.remove();_liveMap=null;}
+  _liveMapBusMarkers={};
+  _liveMapBusLines={};
+  _busAnimState={};
+  _liveMapRouteCache={};
+}
+
+function _initLiveMap(){
+  var mapEl = document.getElementById('liveMapEl');
+  if(_liveMap){_liveMap.remove();_liveMap=null;}
+
+  _liveMap = L.map(mapEl, {zoomControl:true, scrollWheelZoom:true, attributionControl:true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19
+  }).addTo(_liveMap);
+
+  // Centre on Marsala
+  _liveMap.setView([37.800, 12.460], 12);
+
+  // Draw all routes and start bus animation
+  _drawAllRoutes();
+
+  // Update bus positions every 15 seconds
+  _liveMapInterval = setInterval(_updateLiveBuses, 15000);
+}
+
+function _busIcon(color, label){
+  return L.divIcon({
+    className: '',
+    html: '<div style="position:relative;display:flex;flex-direction:column;align-items:center">'
+        + '<div style="background:'+color+';color:#fff;font-family:Barlow Condensed,sans-serif;font-weight:700;font-size:11px;padding:2px 6px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.6)">'+label+'</div>'
+        + '<div style="font-size:22px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35))">🚌</div>'
+        + '</div>',
+    iconSize: [50, 44],
+    iconAnchor: [25, 44],
+    popupAnchor: [0, -44]
+  });
+}
+
+function _interpOnRoute(routePts, fraction){
+  // Walk the route and return the point at `fraction` of total length
+  if(!routePts||routePts.length<2) return null;
+  var total = 0;
+  var dists = [];
+  for(var i=0;i<routePts.length-1;i++){
+    var dx=routePts[i+1][0]-routePts[i][0], dy=routePts[i+1][1]-routePts[i][1];
+    var d=Math.sqrt(dx*dx+dy*dy);
+    dists.push(d); total+=d;
+  }
+  var target = fraction * total;
+  var cum = 0;
+  for(var i=0;i<dists.length;i++){
+    if(cum+dists[i]>=target){
+      var t=(target-cum)/dists[i];
+      return [
+        routePts[i][0]+(routePts[i+1][0]-routePts[i][0])*t,
+        routePts[i][1]+(routePts[i+1][1]-routePts[i][1])*t
+      ];
+    }
+    cum+=dists[i];
+  }
+  return routePts[routePts.length-1];
+}
+
+// Per-bus progress polylines: key → {past, future} Leaflet polylines
+var _liveMapBusLines = {};
+// Animation state: key → {routePts, stopFracs, stopIdx, fromFrac, toFrac, moveStart, moveDuration, pauseUntil}
+var _busAnimState = {};
+var _busAnimFrame = null;
+
+function _routeLen(routePts){
+  var t=0;
+  for(var i=0;i<routePts.length-1;i++){var dx=routePts[i+1][0]-routePts[i][0],dy=routePts[i+1][1]-routePts[i][1];t+=Math.sqrt(dx*dx+dy*dy);}
+  return t;
+}
+
+function _interpAtFrac(routePts, frac){
+  if(!routePts||routePts.length<2) return null;
+  var total=_routeLen(routePts), target=frac*total, cum=0;
+  for(var i=0;i<routePts.length-1;i++){
+    var dx=routePts[i+1][0]-routePts[i][0],dy=routePts[i+1][1]-routePts[i][1];
+    var d=Math.sqrt(dx*dx+dy*dy);
+    if(cum+d>=target){var t=(target-cum)/d; return[routePts[i][0]+dx*t,routePts[i][1]+dy*t];}
+    cum+=d;
+  }
+  return routePts[routePts.length-1].slice();
+}
+
+function _getRouteSegment(routePts, fromFrac, toFrac){
+  if(!routePts||routePts.length<2) return [];
+  var total=_routeLen(routePts);
+  var startD=fromFrac*total, endD=toFrac*total;
+  var pts=[], cum=0, started=false;
+  for(var i=0;i<routePts.length-1;i++){
+    var dx=routePts[i+1][0]-routePts[i][0],dy=routePts[i+1][1]-routePts[i][1];
+    var d=Math.sqrt(dx*dx+dy*dy);
+    if(!started && cum+d>=startD){
+      var t=(startD-cum)/d;
+      pts.push([routePts[i][0]+dx*t, routePts[i][1]+dy*t]);
+      started=true;
+    }
+    if(started) pts.push([routePts[i+1][0],routePts[i+1][1]]);
+    cum+=d;
+    if(started && cum>=endD){
+      var t2=(endD-(cum-d))/d;
+      pts[pts.length-1]=[routePts[i][0]+dx*t2,routePts[i][1]+dy*t2];
+      break;
+    }
+  }
+  if(!pts.length) pts.push(routePts[0].slice());
+  return pts;
+}
+
+function _stopFracOnRoute(routePts, lat, lng){
+  if(!routePts||routePts.length<2) return 0;
+  var total=_routeLen(routePts), bestDist=Infinity, bestFrac=0, cum=0;
+  for(var i=0;i<routePts.length-1;i++){
+    var ax=routePts[i][0],ay=routePts[i][1],bx=routePts[i+1][0],by=routePts[i+1][1];
+    var dx=bx-ax,dy=by-ay,len2=dx*dx+dy*dy;
+    var t=len2>0?((lat-ax)*dx+(lng-ay)*dy)/len2:0;
+    t=Math.max(0,Math.min(1,t));
+    var px=ax+dx*t,py=ay+dy*t;
+    var d=Math.sqrt((lat-px)*(lat-px)+(lng-py)*(lng-py));
+    var segLen=Math.sqrt(len2);
+    if(d<bestDist){bestDist=d; bestFrac=(cum+t*segLen)/total;}
+    cum+=segLen;
+  }
+  return Math.max(0,Math.min(1,bestFrac));
+}
+
+function _startBusAnimation(){
+  if(_busAnimFrame) return;
+  function tick(){
+    _busAnimFrame=requestAnimationFrame(tick);
+    if(!_liveMap||!_liveMapOpen){cancelAnimationFrame(_busAnimFrame);_busAnimFrame=null;return;}
+    var now=Date.now();
+    Object.keys(_busAnimState).forEach(function(key){
+      var st=_busAnimState[key];
+      var marker=_liveMapBusMarkers[key];
+      if(!marker||!st||!st.routePts) return;
+      if(now < st.pauseUntil) return;
+      var elapsed=now-st.moveStart;
+      var t=Math.min(1, elapsed/st.moveDuration);
+      // Cubic ease in-out
+      var e=t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+      var frac=st.fromFrac+(st.toFrac-st.fromFrac)*e;
+      var pos=_interpAtFrac(st.routePts, frac);
+      if(pos) marker.setLatLng(pos);
+      if(t>=1){
+        st.pauseUntil=now+2000;
+        st.stopIdx++;
+        var fracs=st.stopFracs;
+        if(st.stopIdx < fracs.length-1){
+          st.fromFrac=fracs[st.stopIdx];
+          st.toFrac=fracs[st.stopIdx+1];
+          var stops=st.line.stops;
+          var _segM=stops[st.stopIdx+1].m-stops[st.stopIdx].m; var _totM=stops[stops.length-1].m||1; st.moveDuration=Math.max(2000,Math.min(12000,(_segM/_totM)*30000));
+          st.moveStart=now+2000;
+        }
+      }
+    });
+  }
+  _busAnimFrame=requestAnimationFrame(tick);
+}
+
+function _placeBusMarkers(){
+  if(!_liveMap) return;
+  var now=nowMins();
+  var lines=LINES[currentDay];
+  var activeKeys={};
+
+  lines.forEach(function(line){
+    var routePts=_liveMapRouteCache[line.id];
+    var totalDur=line.stops[line.stops.length-1].m;
+
+    line.andata.forEach(function(dep){
+      var depM=toMins(dep), arrM=depM+totalDur;
+      if(depM<=now && now<arrM){
+        var elapsed=now-depM;
+        var fraction=elapsed/totalDur;
+        var key=line.id+'|'+dep;
+        activeKeys[key]=true;
+
+        var curStopIdx=0;
+        for(var k=0;k<line.stops.length-1;k++){if(elapsed>=line.stops[k].m) curStopIdx=k;}
+        var nextStop=curStopIdx<line.stops.length-1?line.stops[curStopIdx+1]:null;
+        var minsLeft=arrM-now;
+
+        var popupHtml='<div style="font-family:Barlow,sans-serif;font-size:13px;min-width:160px">'
+          +'<div style="font-family:Barlow Condensed,sans-serif;font-weight:700;font-size:15px;color:'+line.color+'">'+line.num+'</div>'
+          +'<div style="font-weight:600;margin:2px 0">'+line.name+'</div>'
+          +'<div style="font-size:11px;color:#888;margin-top:4px">Partenza: '+dep+'</div>'
+          +(nextStop?'<div style="margin-top:6px;font-size:12px">Prossima fermata:<br><b>'+nextStop.n+'</b> — '+addMins(dep,nextStop.m)+'</div>':'<div style="margin-top:6px;font-size:12px;color:#c0392b">In arrivo al capolinea</div>')
+          +'<div style="margin-top:4px;font-size:11px;color:#888">Fine corsa tra '+minsLeft+' min</div>'
+          +'</div>';
+
+        // Grey past / colored future — based on bus fraction along route
+        if(routePts && routePts.length>1){
+          var busFrac = _busAnimState[key] ? (_busAnimState[key].fromFrac+(_busAnimState[key].toFrac-_busAnimState[key].fromFrac)*0) : fraction;
+          // Use time-based fraction for split (accurate regardless of animation)
+          var pastPts=_getRouteSegment(routePts, 0, fraction);
+          var futurePts=_getRouteSegment(routePts, fraction, 1);
+          if(_liveMapBusLines[key]){
+            if(pastPts.length>1) _liveMapBusLines[key].past.setLatLngs(pastPts);
+            if(futurePts.length>1) _liveMapBusLines[key].future.setLatLngs(futurePts);
+          } else {
+            var shadowPast=L.polyline(pastPts,{color:'rgba(0,0,0,0.08)',weight:8,lineCap:'round',interactive:false}).addTo(_liveMap);
+            var past=L.polyline(pastPts,{color:'#bbb',weight:5,lineCap:'round',opacity:0.55}).addTo(_liveMap);
+            var shadowFuture=L.polyline(futurePts,{color:'rgba(0,0,0,0.12)',weight:8,lineCap:'round',interactive:false}).addTo(_liveMap);
+            var future=L.polyline(futurePts,{color:line.color,weight:5,lineCap:'round',opacity:0.9}).addTo(_liveMap);
+            _liveMapBusLines[key]={past:past,future:future,shadowPast:shadowPast,shadowFuture:shadowFuture};
+          }
+        }
+
+        // Bus marker — create once, animation moves it along route
+        if(!_liveMapBusMarkers[key]){
+          // Compute each stop's fraction along the route polyline
+          var stopFracs=[];
+          if(routePts && routePts.length>1){
+            line.stops.forEach(function(s){stopFracs.push(_stopFracOnRoute(routePts,s.ll[0],s.ll[1]));});
+          } else {
+            line.stops.forEach(function(s){stopFracs.push(s.m/totalDur);});
+          }
+
+          var startPos=routePts&&routePts.length>1
+            ? (_interpAtFrac(routePts, stopFracs[curStopIdx])||[line.stops[curStopIdx].ll[0],line.stops[curStopIdx].ll[1]])
+            : [line.stops[curStopIdx].ll[0],line.stops[curStopIdx].ll[1]];
+
+          var label=line.num.replace('LINEA ','');
+          var marker=L.marker(startPos,{icon:_busIcon(line.color,label),zIndexOffset:500});
+          marker.bindPopup(popupHtml,{maxWidth:240});
+          marker.addTo(_liveMap);
+          _liveMapBusMarkers[key]=marker;
+
+          var nextIdx=curStopIdx<line.stops.length-1?curStopIdx+1:curStopIdx;
+          var segMins=line.stops[nextIdx].m-line.stops[curStopIdx].m;
+          _busAnimState[key]={
+            line:line,
+            routePts:routePts||null,
+            stopFracs:stopFracs,
+            stopIdx:curStopIdx,
+            fromFrac:stopFracs[curStopIdx],
+            toFrac:stopFracs[nextIdx],
+            moveStart:Date.now(),
+            moveDuration:(function(){var _totM=line.stops[line.stops.length-1].m||1; return Math.max(2000,Math.min(12000,(segMins/_totM)*30000));})(),
+            pauseUntil:0
+          };
+        } else {
+          _liveMapBusMarkers[key].setPopupContent(popupHtml);
+          // If OSRM just loaded, update routePts in anim state
+          if(routePts && _busAnimState[key] && !_busAnimState[key].routePts){
+            _busAnimState[key].routePts=routePts;
+            _busAnimState[key].stopFracs=line.stops.map(function(s){return _stopFracOnRoute(routePts,s.ll[0],s.ll[1]);});
+            var si=_busAnimState[key].stopIdx;
+            _busAnimState[key].fromFrac=_busAnimState[key].stopFracs[si];
+            _busAnimState[key].toFrac=_busAnimState[key].stopFracs[Math.min(si+1,line.stops.length-1)];
+          }
+        }
+      }
+    });
+  });
+
+  Object.keys(_liveMapBusMarkers).forEach(function(k){
+    if(!activeKeys[k]){
+      _liveMapBusMarkers[k].remove(); delete _liveMapBusMarkers[k];
+      delete _busAnimState[k];
+      if(_liveMapBusLines[k]){
+        _liveMapBusLines[k].past.remove(); _liveMapBusLines[k].future.remove();
+        _liveMapBusLines[k].shadowPast.remove(); _liveMapBusLines[k].shadowFuture.remove();
+        delete _liveMapBusLines[k];
+      }
+    }
+  });
+
+  _startBusAnimation();
+}
+
+function _drawAllRoutes(){
+  if(!_liveMap) return;
+  var lines = LINES[currentDay];
+  var legend = document.getElementById('liveMapLegend');
+  legend.innerHTML = '<span style="font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-right:4px">Linee:</span>';
+
+  lines.forEach(function(line){
+    // Legend item
+    var item = document.createElement('div');
+    item.className = 'lm-legend-item';
+    item.innerHTML = '<div class="lm-legend-dot" style="background:'+line.color+'"></div>'
+      + line.num.replace('LINEA ','');
+    legend.appendChild(item);
+
+    // Draw route — use cache or fetch OSRM
+    if(_liveMapRouteCache[line.id]){
+      _drawLiveRoute(line, _liveMapRouteCache[line.id]);
+      _placeBusMarkers();
+    } else {
+      var pts = line.stops.map(function(s){return[s.ll[0],s.ll[1]];});
+      var pl = L.polyline(pts,{color:line.color,weight:4,opacity:0.4,dashArray:'6 4'});
+      pl.addTo(_liveMap);
+      var coords = line.stops.map(function(s){return s.ll[1]+','+s.ll[0];}).join(';');
+      var url = 'https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson&steps=false';
+      (function(l, placeholderPl){
+        fetch(url)
+          .then(function(r){return r.json();})
+          .then(function(data){
+            if(_liveMap) placeholderPl.remove();
+            var fallbackPts = l.stops.map(function(s){return[s.ll[0],s.ll[1]];});
+            var routePts = fallbackPts;
+            if(data.routes&&data.routes[0]){
+              var rp = data.routes[0].geometry.coordinates.map(function(c){return[c[1],c[0]];});
+              var hasSea = rp.some(function(p){return p[1]<12.425&&p[0]<37.82&&p[0]>37.72;});
+              if(!hasSea) routePts = rp;
+            }
+            _liveMapRouteCache[l.id] = routePts;
+            if(_liveMap) _drawLiveRoute(l, routePts);
+            _placeBusMarkers();
+          })
+          .catch(function(){
+            _liveMapRouteCache[l.id]=pts;
+            _placeBusMarkers();
+          });
+      })(line, pl);
+    }
+  });
+
+  // Place bus markers immediately (will use fallback until routes load)
+  _placeBusMarkers();
+
+  // Status text
+  var status = document.createElement('span');
+  status.id = 'liveMapStatus';
+  status.textContent = 'Aggiornato: ' + (function(){var n=new Date();return('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);})();
+  legend.appendChild(status);
+}
+
+function _drawLiveRoute(line, routePts){
+  if(!_liveMap) return;
+  // Shadow
+  L.polyline(routePts,{color:'rgba(0,0,0,0.10)',weight:8,lineCap:'round',lineJoin:'round',interactive:false}).addTo(_liveMap);
+  // Coloured line
+  L.polyline(routePts,{color:line.color,weight:5,lineCap:'round',lineJoin:'round',opacity:0.85}).addTo(_liveMap);
+}
+
+function _updateLiveBuses(){
+  if(!_liveMap||!_liveMapOpen) return;
+  _placeBusMarkers();
+  var status = document.getElementById('liveMapStatus');
+  if(status) status.textContent = 'Aggiornato: '+(function(){var n=new Date();return('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);})();
+}
+
+// Apply season on load
+(function(){
+  var summer = isSummer();
+  var now = new Date();
+  var sub = document.getElementById('heroSub');
+  if(sub){
+    if(summer){
+      sub.textContent = 'Orario estivo · 19 Giu – 14 Set ☀️';
+    } else {
+      sub.textContent = 'Orario invernale · dal 15 Set';
+    }
+  }
+  // Update section label
+  var sl = document.getElementById('sectionLabel');
+  if(sl && summer){
+    sl.textContent = '— Linee feriali estive (Lun–Sab) —';
+  }
+})();
+// Init season UI
+(function(){
+  var summer = isSummer();
+  var badge = document.getElementById('seasonBadge');
+  var sub = document.getElementById('heroSub');
+  if(summer){
+    badge.textContent = '☀️ Orario Estivo';
+    badge.style.background = 'rgba(245,200,66,0.25)';
+    badge.style.color = '#F5C842';
+    if(sub) sub.textContent = 'Orario estivo · dal 19.06 al 14.09';
+  } else {
+    badge.textContent = '❄️ Orario Invernale';
+    badge.style.background = 'rgba(255,255,255,0.15)';
+    badge.style.color = 'rgba(255,255,255,0.7)';
+    if(sub) sub.textContent = 'Orario invernale · dal 15.09 al 18.06';
+  }
+  // Also set section label
+  var season = summer ? 'Estivo ☀️' : 'Invernale ❄️';
+  var sl = document.getElementById('sectionLabel');
+  if(sl) sl.textContent = '— Linee feriali (Lun–Sab) · Orario '+season+' —';
+})();
+updateClock();updateTicker();render();
+setInterval(updateClock,15000);setInterval(updateTicker,30000);
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE: METEO (Open-Meteo, no API key needed)
+   ═══════════════════════════════════════════════════════════════ */
+var _weatherLoaded=false;
+function loadWeather(){
+  if(_weatherLoaded)return;
+  _weatherLoaded=true;
+  // Marsala coords: 37.7966, 12.4352
+  var url='https://api.open-meteo.com/v1/forecast?latitude=37.7966&longitude=12.4352&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m&hourly=temperature_2m,weathercode,precipitation_probability&timezone=Europe%2FRome&forecast_days=1';
+  fetch(url)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var cur=d.current;
+      var temp=Math.round(cur.temperature_2m);
+      var code=cur.weathercode;
+      var wind=Math.round(cur.windspeed_10m);
+      var hum=cur.relativehumidity_2m;
+      var icon=_wmoIcon(code);
+      var desc=_wmoDesc(code);
+      document.getElementById('weatherIcon').textContent=icon;
+      document.getElementById('weatherTemp').textContent=temp+'°C';
+      document.getElementById('weatherDesc').textContent=desc;
+      document.getElementById('weatherExtra').innerHTML='💨 '+wind+' km/h&nbsp;&nbsp;💧 '+hum+'%';
+
+      // Hourly strip (next 8h)
+      var now=new Date();
+      var nowH=now.getHours();
+      var times=d.hourly.time;
+      var temps=d.hourly.temperature_2m;
+      var codes=d.hourly.weathercode;
+      var prec=d.hourly.precipitation_probability;
+      var html='';
+      var shown=0;
+      for(var i=0;i<times.length&&shown<8;i++){
+        var h=parseInt(times[i].split('T')[1].split(':')[0]);
+        if(h<nowH)continue;
+        html+='<div style="flex-shrink:0;text-align:center;background:rgba(255,255,255,0.07);border-radius:8px;padding:6px 10px;min-width:54px">'+
+          '<div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:.08em">'+('0'+h).slice(-2)+':00</div>'+
+          '<div style="font-size:18px;margin:3px 0">'+_wmoIcon(codes[i])+'</div>'+
+          '<div style="font-size:13px;font-weight:700;color:#fff;font-family:\'Barlow Condensed\',sans-serif">'+Math.round(temps[i])+'°</div>'+
+          (prec[i]>20?'<div style="font-size:9px;color:#7dd3fc">🌧 '+prec[i]+'%</div>':'<div style="font-size:9px;color:transparent">·</div>')+
+        '</div>';
+        shown++;
+      }
+      document.getElementById('weatherHourly').innerHTML=html;
+
+      // Umbrella warning in ticker if rain likely
+      var rainSoon=false;
+      for(var i=0;i<times.length;i++){
+        var h=parseInt(times[i].split('T')[1].split(':')[0]);
+        if(h>=nowH&&h<=nowH+3&&prec[i]>=50){rainSoon=true;break;}
+      }
+      // Umbrella warning in ticker if rain likely
+      var rainSoon=false;
+      for(var i=0;i<times.length;i++){
+        var h=parseInt(times[i].split('T')[1].split(':')[0]);
+        if(h>=nowH&&h<=nowH+3&&prec[i]>=50){rainSoon=true;break;}
+      }
+      var rainBadge=document.getElementById('rainBadge');
+      if(rainBadge){
+        if(rainSoon){
+          rainBadge.style.cssText='background:#1e40af;color:#fff;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-left:4px';
+          rainBadge.textContent='☂️ Pioggia';
+          rainBadge.style.display='';
+        } else {
+          rainBadge.style.display='none';
+        }
+      }
+    })
+    .catch(function(){
+      document.getElementById('weatherIcon').textContent='🌤';
+      document.getElementById('weatherTemp').textContent='Marsala';
+      document.getElementById('weatherDesc').textContent='meteo non disponibile';
+    });
+}
+function _wmoIcon(c){
+  if(c===0)return'☀️';
+  if(c<=2)return'🌤';
+  if(c===3)return'☁️';
+  if(c<=49)return'🌫';
+  if(c<=57)return'🌦';
+  if(c<=67)return'🌧';
+  if(c<=77)return'🌨';
+  if(c<=82)return'🌦';
+  if(c<=86)return'🌨';
+  if(c<=99)return'⛈';
+  return'🌡';
+}
+function _wmoDesc(c){
+  if(c===0)return'Sereno';
+  if(c<=2)return'Poco nuvoloso';
+  if(c===3)return'Nuvoloso';
+  if(c<=49)return'Nebbia';
+  if(c<=57)return'Pioggerella';
+  if(c<=67)return'Pioggia';
+  if(c<=77)return'Neve';
+  if(c<=82)return'Rovesci';
+  if(c<=86)return'Neve a rovesci';
+  if(c<=99)return'Temporale';
+  return'';
+}
+function toggleWeatherDetail(){
+  var d=document.getElementById('weatherDetail');
+  d.style.display=d.style.display==='none'?'block':'none';
+}
+// Load weather on page ready
+setTimeout(loadWeather, 800);
+setInterval(function(){_weatherLoaded=false;loadWeather();}, 10*60*1000); // refresh every 10 min
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE: CRONOLOGIA FERMATE (localStorage)
+   ═══════════════════════════════════════════════════════════════ */
+var _stopHistory=[];
+try{_stopHistory=JSON.parse(localStorage.getItem('busStopHistory')||'[]');}catch(e){}
+
+function _saveStopHistory(lineId,stopIdx,stopName,lineName){
+  var entry={lineId:lineId,stopIdx:stopIdx,stopName:stopName,lineName:lineName,ts:Date.now()};
+  _stopHistory=_stopHistory.filter(function(h){return!(h.lineId===lineId&&h.stopIdx===stopIdx);});
+  _stopHistory.unshift(entry);
+  if(_stopHistory.length>5)_stopHistory=_stopHistory.slice(0,5);
+  try{localStorage.setItem('busStopHistory',JSON.stringify(_stopHistory));}catch(e){}
+}
+
+// Patch setMyStop to save history
+var _origSetMyStop=setMyStop;
+setMyStop=function(lineId,stopIdx,stopName){
+  var line=LINES[currentDay].find(function(l){return l.id===lineId;});
+  if(line)_saveStopHistory(lineId,stopIdx,stopName,line.name);
+  _origSetMyStop(lineId,stopIdx,stopName);
+};
+
+// Inject history section into suggestions
+var _origBuildSuggestions=buildSuggestions;
+buildSuggestions=function(q){
+  var results=_origBuildSuggestions(q);
+  if(!q&&_stopHistory.length>0){
+    var history=[];
+    _stopHistory.forEach(function(h){
+      // only include if line still exists in current day
+      var line=LINES[currentDay].find(function(l){return l.id===h.lineId;});
+      if(line&&line.stops[h.stopIdx]){
+        history.push({type:'history',label:h.stopName,sub:h.lineName,lineId:h.lineId,stopIdx:h.stopIdx,stopName:h.stopName});
+      }
+    });
+    return history.concat(results);
+  }
+  return results;
+};
+
+// Patch renderSuggestions to show history section
+var _origRenderSuggestions=renderSuggestions;
+renderSuggestions=function(sug){
+  var hasHistory=sug.some(function(s){return s.type==='history';});
+  if(!hasHistory){_origRenderSuggestions(sug);return;}
+  var html='';
+  if(hasHistory){
+    html+='<div class="sug-section">🕐 Ultime fermate</div>';
+    sug.filter(function(s){return s.type==='history';}).forEach(function(s){
+      html+='<div class="sug-item" onclick="pickStopSuggestion(\''+s.lineId+'\','+s.stopIdx+',\''+escQ(s.stopName)+'\')">'+
+        '<span class="sug-item-icon">📍</span>'+
+        '<div><div class="sug-item-main">'+s.label+'</div><div class="sug-item-sub">'+s.sub+'</div></div>'+
+      '</div>';
+    });
+  }
+  var nonHistory=sug.filter(function(s){return s.type!=='history';});
+  if(nonHistory.length){
+    _origRenderSuggestions(nonHistory);
+    // prepend our history html
+    var el=document.getElementById('suggestions');
+    el.innerHTML=html+el.innerHTML;
+    return;
+  }
+  document.getElementById('suggestions').innerHTML=html;
+};
+
+// Show history on search focus even with empty query
+var _origOnSearchFocus=onSearchFocus;
+onSearchFocus=function(){
+  if(_stopHistory.length>0){
+    var sug=buildSuggestions('');
+    if(sug.length>0){renderSuggestions(sug);showSuggestions();}
+  }
+  _origOnSearchFocus();
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE: CORSA PERSA → MOSTRA PROSSIMA + ULTIMA CORSA WARNING
+   Patch makeChips to add "corsa persa" label and show next dep
+   Patch next-badge to show "ultima corsa" warning
+   ═══════════════════════════════════════════════════════════════ */
+// We override render() to inject last-bus warning into card badge
+// and add a "prossima" hint next to missed departures.
+// These are handled inline inside render() via a post-render DOM walk.
+function _applyMissedBusEnhancements(){
+  var now=nowMins();
+  var lines=LINES[currentDay];
+  lines.forEach(function(l){
+    var card=document.getElementById('card-'+l.id);
+    if(!card)return;
+
+    // Last-bus warning: if next departure is the last one of the day
+    var myStopIdx=(myStop&&myStop.lineId===l.id)?myStop.stopIdx:-1;
+    var stopOffset=myStopIdx>=0?l.stops[myStopIdx].m:0;
+    var futureIdx=-1;
+    for(var i=0;i<l.andata.length;i++){
+      if(toMins(l.andata[i])+stopOffset>now){futureIdx=i;break;}
+    }
+    if(futureIdx===l.andata.length-1){
+      // This IS the last bus
+      var badge=card.querySelector('.next-badge:not(.gone)');
+      if(badge&&!badge.querySelector('.last-bus-tag')){
+        var tag=document.createElement('span');
+        tag.className='last-bus-tag';
+        tag.textContent='ULTIMA';
+        tag.style.cssText='font-size:8px;background:#c0392b;color:#fff;border-radius:2px;padding:1px 4px;margin-left:5px;vertical-align:middle;font-weight:700;letter-spacing:.05em';
+        badge.appendChild(tag);
+      }
+    }
+
+    // "Corsa persa → prossima" on past chips
+    var chips=card.querySelectorAll('.t-chip.past');
+    chips.forEach(function(chip){
+      if(chip.querySelector('.next-hint'))return;
+      var t=chip.textContent.trim().replace('*','').replace('**','').replace('***','');
+      // find next departure after this one
+      var thisM=toMins(t.replace(/\D+$/,''));
+      var nextDep=null;
+      for(var i=0;i<l.andata.length;i++){
+        if(toMins(l.andata[i])>thisM&&toMins(l.andata[i])>now){nextDep=l.andata[i];break;}
+      }
+      if(nextDep){
+        chip.title='Corsa persa — prossima: '+nextDep;
+        chip.style.position='relative';
+      }
+    });
+  });
+}
+
+// Patch render to run enhancements after each render
+var _origRender=render;
+render=function(keepOpen){
+  _origRender(keepOpen);
+  setTimeout(_applyMissedBusEnhancements,50);
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE: CONDIVIDI FERMATA (deep link via URL hash)
+   ═══════════════════════════════════════════════════════════════ */
+function shareStop(){
+  if(!myStop)return;
+  var hash='#stop='+myStop.lineId+','+myStop.stopIdx+','+encodeURIComponent(myStop.stopName);
+  var url=location.href.split('#')[0]+hash;
+  if(navigator.share){
+    navigator.share({title:'Bus Marsala — '+myStop.stopName,text:'Fermata '+myStop.stopName,url:url})
+      .catch(function(){});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      _showToast('🔗 Link copiato!');
+    });
+  } else {
+    prompt('Copia questo link:',url);
+  }
+}
+
+// Read hash on load
+(function(){
+  var hash=location.hash;
+  if(hash.indexOf('#stop=')===0){
+    var parts=hash.slice(6).split(',');
+    if(parts.length>=3){
+      var lineId=parts[0];
+      var stopIdx=parseInt(parts[1]);
+      var stopName=decodeURIComponent(parts.slice(2).join(','));
+      setTimeout(function(){
+        // find which day has this line
+        var found=false;
+        ['feriale','domenicale'].forEach(function(day){
+          if(found)return;
+          LINES[day].forEach(function(l){
+            if(l.id===lineId&&l.stops[stopIdx]){
+              found=true;
+              if(day!==currentDay){
+                currentDay=day;
+                var btns=document.querySelectorAll('.day-btn');
+                btns.forEach(function(b){b.classList.remove('active');});
+                if(day==='domenicale')btns[1].classList.add('active');
+                else btns[0].classList.add('active');
+              }
+              setMyStop(lineId,stopIdx,stopName);
+              var card=document.getElementById('card-'+lineId);
+              if(card){card.classList.add('open');setTimeout(function(){card.scrollIntoView({behavior:'smooth'});},300);}
+            }
+          });
+        });
+      },400);
+    }
+  }
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE: TOAST NOTIFICATION helper
+   ═══════════════════════════════════════════════════════════════ */
+function _showToast(msg, duration){
+  duration=duration||2500;
+  var t=document.getElementById('_toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='_toast';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(26,18,8,0.92);color:#fff;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;padding:10px 20px;border-radius:8px;z-index:99999;transition:opacity .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.3)';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1';
+  clearTimeout(t._to);
+  t._to=setTimeout(function(){t.style.opacity='0';},duration);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE: PWA / HOME SCREEN WIDGET PROMPT
+   ═══════════════════════════════════════════════════════════════ */
+var _deferredInstall=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  _deferredInstall=e;
+  // Show install banner after 30s if user hasn't dismissed
+  setTimeout(function(){
+    if(_deferredInstall)_showInstallBanner();
+  },30000);
+});
+window.addEventListener('appinstalled',function(){
+  _showToast('✅ App installata! Aprila dalla schermata home.');
+  _deferredInstall=null;
+  var banner=document.getElementById('_installBanner');
+  if(banner)banner.remove();
+});
+
+function _showInstallBanner(){
+  if(document.getElementById('_installBanner'))return;
+  var b=document.createElement('div');
+  b.id='_installBanner';
+  b.style.cssText='position:fixed;bottom:70px;left:12px;right:12px;background:var(--sea);color:#fff;border-radius:10px;padding:10px 12px;z-index:9998;box-shadow:0 4px 20px rgba(0,0,0,0.35);display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.15)';
+  b.innerHTML='<span style="font-size:22px">🚌</span>'+
+    '<div style="flex:1;min-width:0">'+
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:12px;letter-spacing:.04em">Aggiungi alla schermata home</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Accesso rapido, anche offline</div>'+
+    '</div>'+
+    '<button onclick="installApp()" style="background:var(--sun);color:var(--ink);border:none;border-radius:5px;padding:5px 11px;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0">Installa</button>'+
+    '<button onclick="dismissInstall()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">&times;</button>';
+  document.body.appendChild(b);
+  // iOS users can't use beforeinstallprompt — show instructions
+  if(!_deferredInstall&&/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    b.querySelector('button').textContent='Come fare';
+    b.querySelector('button').onclick=function(){
+      _showToast('Su iOS: tocca ↑ Condividi → "Aggiungi a schermata Home"',5000);
+    };
+  }
+}
+
+function installApp(){
+  if(_deferredInstall){
+    _deferredInstall.prompt();
+    _deferredInstall.userChoice.then(function(r){
+      if(r.outcome==='accepted')_showToast('✅ Installazione in corso…');
+      _deferredInstall=null;
+      var b=document.getElementById('_installBanner');
+      if(b)b.remove();
+    });
+  }
+}
+function dismissInstall(){
+  var b=document.getElementById('_installBanner');
+  if(b)b.remove();
+  _deferredInstall=null;
+  try{localStorage.setItem('installDismissed','1');}catch(e){}
+}
+// Show iOS hint once after 20s if on Safari iOS and not yet installed
+(function(){
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.navigator.standalone;
+  var dismissed=false;
+  try{dismissed=localStorage.getItem('installDismissed')==='1';}catch(e){}
+  if(isIOS&&!dismissed){setTimeout(_showInstallBanner,20000);}
+})();
+
+</script>
+
+<div id="liveMapPanel">
+  <div id="liveMapPanelHeader">
+    <h2><span class="pulse"></span> Mappa Live — Tutte le Linee</h2>
+    <button id="liveMapClose" onclick="closeLiveMap()">✕ Chiudi</button>
+  </div>
+  <div id="liveMapEl"></div>
+  <div id="liveMapLegend" id="liveMapLegend"></div>
+</div>
+
+<div id="coordFixPanel">
+  <div id="coordFixHeader">
+    <h2>🛠 Correggi coordinate fermate</h2>
+    <select id="coordFixLineSelect" onchange="coordFixLoadLine()"></select>
+    <button id="coordFixClose" onclick="document.getElementById('coordFixPanel').classList.remove('visible')">✕ Chiudi</button>
+  </div>
+  <div id="coordFixMap"></div>
+  <div id="coordFixOutput">← Trascina i marker sulla fermata giusta. Le coordinate corrette appariranno qui.</div>
+</div>
+<script>
+/* ── COORD FIX TOOL ── */
+var _footerClicks=0;
+document.querySelector('footer').addEventListener('click',function(){
+  _footerClicks++;
+  if(_footerClicks>=5){_footerClicks=0;openCoordFix();}
+});
+
+function openCoordFix(){
+  var panel=document.getElementById('coordFixPanel');
+  panel.classList.add('visible');
+  var sel=document.getElementById('coordFixLineSelect');
+  sel.innerHTML='';
+  var allLines=LINES.feriale.concat(LINES.domenicale);
+  allLines.forEach(function(l){
+    var o=document.createElement('option');
+    o.value=l.id;o.textContent=l.num+' — '+l.name;
+    sel.appendChild(o);
+  });
+  ensureLeafletReady(function(){
+    setTimeout(coordFixLoadLine,100);
+  });
+}
+
+var _cfMap=null,_cfMarkers=[];
+function coordFixLoadLine(){
+  var lineId=document.getElementById('coordFixLineSelect').value;
+  var allLines=LINES.feriale.concat(LINES.domenicale);
+  var line=null;
+  for(var i=0;i<allLines.length;i++){if(allLines[i].id===lineId){line=allLines[i];break;}}
+  if(!line)return;
+
+  var mapEl=document.getElementById('coordFixMap');
+  if(_cfMap){_cfMap.remove();_cfMap=null;}
+  _cfMarkers=[];
+
+  _cfMap=L.map(mapEl,{zoomControl:true,scrollWheelZoom:true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(_cfMap);
+
+  var stopCoords=[];
+  line.stops.forEach(function(s,i){
+    var marker=L.marker([s.ll[0],s.ll[1]],{draggable:true,title:s.n});
+    marker.bindTooltip('<b>'+(i+1)+'. '+s.n+'</b>',{permanent:true,direction:'top',offset:[0,-8]});
+    marker.addTo(_cfMap);
+    marker._stopIdx=i;
+    marker._stopName=s.n;
+    marker._lineId=lineId;
+    marker.on('dragend',function(e){
+      var ll=e.target.getLatLng();
+      s.ll[0]=parseFloat(ll.lat.toFixed(4));
+      s.ll[1]=parseFloat(ll.lng.toFixed(4));
+      coordFixUpdateOutput(line);
+    });
+    _cfMarkers.push(marker);
+    stopCoords.push([s.ll[0],s.ll[1]]);
+  });
+
+  _cfMap.fitBounds(L.latLngBounds(stopCoords),{padding:[40,40]});
+  coordFixUpdateOutput(line);
+}
+
+function coordFixUpdateOutput(line){
+  var out='// '+line.num+' — '+line.name+'\nstops:[\n';
+  line.stops.forEach(function(s){
+    out+='  {n:\''+s.n+'\',ll:['+s.ll[0]+','+s.ll[1]+'],m:'+s.m+'},\n';
+  });
+  out+=']';
+  document.getElementById('coordFixOutput').textContent=out;
+}
+
+/* ════════════════════════════════════════════════════
+   AST EXTRAURBANO PANEL
+   Data sourced from official AST Trapani timetables
+   and Comune di Marsala municipal documents.
+   ════════════════════════════════════════════════════ */
+
+/* ── AST route data ──────────────────────────────────────────────────────
+   Sources:
+   • AST Trapani — Orario Feriale Invernale, in vigore dal 08/01/2026
+     (OrariAST8gennaio2026.pdf — documento ufficiale AST Sede di Trapani)
+   • Autoservizi Salemi — Marsala↔Palermo, ed. 05/01/2026
+     (autoservizisalemi.it/orari/MARSALA-PALERMO.pdf)
+   Solo corse con fermata a Marsala incluse.
+   ─────────────────────────────────────────────────────────────────────── */
+var AST_ROUTES = [
+{
+  id:'ast_birgi_marsala',
+  label:'✈️ Birgi → Marsala',
+  color:'#E67E22',
+  name:'Aeroporto Birgi → Marsala',
+  via:'AST Trapani · Fermata: Marsala Via A. Fazio (Staz. FS)',
+  note:'Biglietto Birgi–Marsala: €2,70 · Fermata a richiesta · 25 dic: nessun servizio · Tel. AST: 0923 21021',
+  destMins: 20,
+  feriale:['7:25','12:40','13:30','14:55'],
+  domenicale:[],
+  ritorno_label:'Marsala → Birgi (→ Trapani)',
+  ritorno_feriale:['6:35','12:00','12:50','14:15'],
+  ritorno_domenicale:[],
+  stops_andata:['Aeroporto Birgi – Area Bus','Marsala – Via A. Fazio (Staz. FS)'],
+  stops_ritorno:['Marsala – Via A. Fazio (Staz. FS)','Aeroporto Birgi – Area Bus'],
+  stop_mins_andata:[0,20],
+  stop_mins_ritorno:[0,20]
+},
+{
+  id:'ast_palermo',
+  label:'🌇 Palermo',
+  color:'#C0392B',
+  name:'Marsala → Palermo',
+  via:'Autoservizi Salemi · Via A. Fazio (Staz. FS) · via Birgi – P. Raisi – Via Fazello',
+  note:'Biglietto ~€13 · Durata ~2h 30min · Prenotazione: autoservizisalemi.it · Tel. 0923 981120',
+  destMins: 150,
+  feriale:['2:30','3:00','4:30','4:50','5:15','5:30','5:45','6:30','6:45','7:00','7:30','8:30','9:00','10:00','10:30','12:30','13:00','13:30','14:00','15:00','16:00','16:30','17:00','18:00','19:30','21:00','23:00'],
+  domenicale:['7:30','8:30','10:30','11:00','13:00','16:00','16:30','17:00','17:30','18:00','19:00','23:55'],
+  ritorno_label:'Palermo → Marsala',
+  ritorno_feriale:['3:00','6:15','6:30','7:30','8:30','10:00','11:00','12:00','12:30','13:00','14:00','14:30','15:00','16:00','16:30','17:00','18:00','18:30','19:00','20:00','21:30','23:15'],
+  ritorno_domenicale:['3:00','6:15','7:30','11:00','14:30','16:00','16:30','18:30','20:00','21:30','23:15'],
+  stops_andata:['Marsala – Via A. Fazio (Staz. FS)','Aeroporto Trapani Birgi (sel. corse)','Aeroporto Palermo P. Raisi','Palermo – Via Fazello (Staz. FS)'],
+  stops_ritorno:['Palermo – Via Fazello (Staz. FS)','Aeroporto Palermo P. Raisi','Aeroporto Birgi (sel. corse)','Marsala – Via A. Fazio (Staz. FS)'],
+  stop_mins_andata:[0,25,105,150],
+  stop_mins_ritorno:[0,45,125,150]
+}
+];
+
+var _astActiveRoute = 0;
+var _astDir = 'andata'; // 'andata' | 'ritorno'
+var _astInterval = null;
+var _astDay = 'feriale';
+
+function openAstPanel(){
+  document.getElementById('astPanel').style.display='block';
+  document.body.style.overflow='hidden';
+  _astDay = currentDay;
+  _astActiveRoute = 0;
+  _astDir = 'andata';
+  renderAstTabs();
+  renderAstRoute();
+  updateAstTicker();
+  clearInterval(_astInterval);
+  _astInterval = setInterval(function(){ updateAstTicker(); renderAstRoute(); }, 30000);
+}
+
+function closeAstPanel(){
+  document.getElementById('astPanel').style.display='none';
+  document.body.style.overflow='';
+  clearInterval(_astInterval);
+  _astInterval = null;
+}
+
+function renderAstTabs(){
+  var html='';
+  AST_ROUTES.forEach(function(r,i){
+    var active = i===_astActiveRoute;
+    html+='<button onclick="setAstRoute('+i+')" style="flex-shrink:0;background:'+(active?'rgba(245,200,66,0.15)':'transparent')+';border:none;border-bottom:'+(active?'2px solid var(--sun)':'2px solid transparent')+';color:'+(active?'var(--sun)':'rgba(255,255,255,0.5)')+';font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;padding:12px 14px;cursor:pointer;white-space:nowrap;transition:color .2s">'+r.label+'</button>';
+  });
+  document.getElementById('astTabs').innerHTML=html;
+}
+
+function setAstRoute(i){
+  _astActiveRoute=i;
+  _astDir='andata';
+  renderAstTabs();
+  renderAstRoute();
+}
+
+function getAstTimes(route, dir){
+  if(dir==='andata') return _astDay==='domenicale' ? route.domenicale : route.feriale;
+  else return _astDay==='domenicale' ? route.ritorno_domenicale : route.ritorno_feriale;
+}
+
+function renderAstRoute(){
+  var route = AST_ROUTES[_astActiveRoute];
+  var now = nowMins();
+  var times = getAstTimes(route, _astDir);
+  var destMins = route.destMins;
+  var stops = _astDir==='andata' ? route.stops_andata : route.stops_ritorno;
+  var stopMins = _astDir==='andata' ? route.stop_mins_andata : route.stop_mins_ritorno;
+
+  // Dir toggle
+  var dirHtml = '<div style="display:flex;gap:8px;margin-bottom:14px">'
+    + '<button onclick="_astDir=\'andata\';renderAstRoute()" style="flex:1;padding:8px;border-radius:6px;border:none;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:13px;cursor:pointer;background:'+(_astDir==='andata'?'var(--sun)':'rgba(255,255,255,0.1)')+';color:'+(_astDir==='andata'?'var(--ink)':'rgba(255,255,255,0.6)')+'">'
+    + '→ '+route.name.split(' → ')[1]+'</button>'
+    + '<button onclick="_astDir=\'ritorno\';renderAstRoute()" style="flex:1;padding:8px;border-radius:6px;border:none;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:13px;cursor:pointer;background:'+(_astDir==='ritorno'?'var(--sun)':'rgba(255,255,255,0.1)')+';color:'+(_astDir==='ritorno'?'var(--ink)':'rgba(255,255,255,0.6)')+'">← '+route.name.split(' → ')[0]+'</button>'
+    + '</div>';
+
+  // Header
+  var dirLabel = _astDir==='andata' ? route.name : route.ritorno_label;
+  var headerHtml = '<div style="margin-bottom:14px">'
+    + '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:19px;color:#fff;letter-spacing:.03em">'+dirLabel+'</div>'
+    + '<div style="font-family:\'Barlow\',sans-serif;font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px">'+route.via+'</div>'
+    + '<div style="font-family:\'Barlow\',sans-serif;font-size:11px;color:rgba(255,255,255,0.35);margin-top:3px">'+route.note+'</div>'
+    + '</div>';
+
+  // Day switch
+  var dayHtml = '<div style="display:flex;gap:6px;margin-bottom:14px">'
+    + '<button onclick="_astDay=\'feriale\';renderAstRoute();updateAstTicker()" style="padding:5px 12px;border-radius:5px;border:none;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:12px;cursor:pointer;background:'+(_astDay==='feriale'?'rgba(255,255,255,0.2)':'rgba(255,255,255,0.07)')+';color:'+(_astDay==='feriale'?'#fff':'rgba(255,255,255,0.4)')+'">Lun–Sab</button>'
+    + '<button onclick="_astDay=\'domenicale\';renderAstRoute();updateAstTicker()" style="padding:5px 12px;border-radius:5px;border:none;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:12px;cursor:pointer;background:'+(_astDay==='domenicale'?'rgba(255,255,255,0.2)':'rgba(255,255,255,0.07)')+';color:'+(_astDay==='domenicale'?'#fff':'rgba(255,255,255,0.4)')+'">Dom/Festivi</button>'
+    + '</div>';
+
+  // Departure cards
+  var depHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:18px">';
+  times.forEach(function(t){
+    var depM = toMins(t);
+    var arrM = depM + destMins;
+    var inProgress = depM <= now && now < arrM;
+    var isPast = arrM <= now;
+    var isNext = !isPast && !inProgress && depM > now;
+    var minsAway = depM - now;
+    var bg, border, textColor;
+    if(inProgress){ bg='rgba(39,174,96,0.18)'; border='1px solid rgba(39,174,96,0.5)'; textColor='#2ecc71'; }
+    else if(isPast){ bg='rgba(255,255,255,0.04)'; border='1px solid rgba(255,255,255,0.08)'; textColor='rgba(255,255,255,0.25)'; }
+    else { bg='rgba(255,255,255,0.07)'; border='1px solid rgba(255,255,255,0.12)'; textColor='#fff'; }
+
+    depHtml += '<div style="background:'+bg+';border:'+border+';border-radius:8px;padding:10px 12px">'
+      + '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:22px;color:'+textColor+';letter-spacing:.02em">'+t+'</div>'
+      + '<div style="font-family:\'Barlow\',sans-serif;font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px">arr. ~'+addMins(t,destMins)+'</div>';
+    if(inProgress){
+      var elapsed = now - depM;
+      var pct = Math.round(elapsed/destMins*100);
+      depHtml += '<div style="font-size:10px;color:#2ecc71;margin-top:4px">▶ In viaggio '+pct+'%</div>'
+        + '<div style="height:3px;background:rgba(46,204,113,0.2);border-radius:2px;margin-top:4px"><div style="height:100%;width:'+pct+'%;background:#2ecc71;border-radius:2px"></div></div>';
+    } else if(!isPast && minsAway <= 30){
+      depHtml += '<div style="font-size:10px;color:var(--sun);margin-top:4px">⏱ '+minsAway+'m</div>';
+    }
+    depHtml += '</div>';
+  });
+  depHtml += '</div>';
+
+  // Stop list
+  var stopsHtml = '<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 14px;margin-bottom:6px">'
+    + '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-bottom:10px">Fermate principali</div>';
+  stops.forEach(function(s,i){
+    var isLast = i===stops.length-1;
+    stopsHtml += '<div style="display:flex;align-items:flex-start;gap:10px;'+(i>0?'margin-top:8px':'')+'">'
+      + '<div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;margin-top:2px">'
+      + '<div style="width:10px;height:10px;border-radius:50%;background:'+(i===0||isLast?'var(--sun)':'rgba(255,255,255,0.3)')+';border:2px solid '+(i===0||isLast?'var(--sun)':'rgba(255,255,255,0.2)') +'"></div>'
+      + (!isLast ? '<div style="width:2px;flex:1;min-height:16px;background:rgba(255,255,255,0.1);margin-top:2px"></div>' : '')
+      + '</div>'
+      + '<div style="flex:1">'
+      + '<div style="font-family:\'Barlow\',sans-serif;font-size:13px;color:'+(i===0||isLast?'#fff':'rgba(255,255,255,0.65)')+'">'+s+'</div>'
+      + '<div style="font-family:\'Barlow\',sans-serif;font-size:10px;color:rgba(255,255,255,0.3)">+'+stopMins[i]+' min</div>'
+      + '</div></div>';
+  });
+  stopsHtml += '</div>';
+
+  document.getElementById('astRouteContent').innerHTML = dirHtml + headerHtml + dayHtml + depHtml + stopsHtml;
+
+  // Update AST clock
+  var n=new Date();
+  document.getElementById('astClock').textContent=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);
+}
+
+function updateAstTicker(){
+  var now = nowMins();
+  var best = null, bestRoute = null, bestDir = null, bestMins = Infinity;
+  AST_ROUTES.forEach(function(r){
+    ['andata','ritorno'].forEach(function(dir){
+      var times = dir==='andata'
+        ? (_astDay==='domenicale' ? r.domenicale : r.feriale)
+        : (_astDay==='domenicale' ? r.ritorno_domenicale : r.ritorno_feriale);
+      times.forEach(function(t){
+        var m = toMins(t);
+        if(m > now && m - now < bestMins){
+          bestMins = m - now;
+          best = t;
+          bestRoute = r;
+          bestDir = dir;
+        }
+      });
+    });
+  });
+  var el = document.getElementById('astNextText');
+  if(!el) return;
+  if(best){
+    var label = bestDir==='andata' ? bestRoute.name : bestRoute.ritorno_label;
+    el.innerHTML = '<strong style="color:#fff">'+best+'</strong> — '+label
+      + (bestMins<=60 ? ' <span style="color:var(--sun)">('+(bestMins<=1?'Ora!':bestMins+'m')+')</span>' : '');
+  } else {
+    el.textContent = 'Nessuna altra corsa oggi.';
+  }
+}
+</script>
+</body>
+</html>
